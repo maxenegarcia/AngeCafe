@@ -1,22 +1,28 @@
+using AngeCafe.API.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+// Database Connection
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+    ));
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+Console.WriteLine("CONTENT ROOT: " + app.Environment.ContentRootPath);
+Console.WriteLine("WEB ROOT: " + app.Environment.WebRootPath);
+Console.WriteLine("MENU EXISTS: " +
+    File.Exists(Path.Combine(app.Environment.WebRootPath!, "menu.html"))); app.UseHttpsRedirection();
 
-app.UseHttpsRedirection();
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 app.UseAuthorization();
 
