@@ -1,7 +1,7 @@
-﻿using AngeCafe.API.Data;
+﻿
 using AngeCafe.API.Models;
+using AngeCafe.API.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace AngeCafe.API.Controllers
 {
@@ -9,26 +9,27 @@ namespace AngeCafe.API.Controllers
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly ICategoryService _categoryService;
 
-        public CategoryController(AppDbContext context)
+        public CategoryController(ICategoryService categoryService)
         {
-            _context = context;
+            _categoryService = categoryService;
         }
 
-        
+        // GET: api/Category
         [HttpGet]
         public async Task<IActionResult> GetCategories()
         {
-            var categories = await _context.Categories.ToListAsync();
+            var categories = await _categoryService.GetAllAsync();
 
             return Ok(categories);
         }
 
+        // GET: api/Category/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCategory(int id)
         {
-            var category = await _context.Categories.FindAsync(id);
+            var category = await _categoryService.GetByIdAsync(id);
 
             if (category == null)
             {
@@ -38,7 +39,7 @@ namespace AngeCafe.API.Controllers
             return Ok(category);
         }
 
-     
+        // POST: api/Category
         [HttpPost]
         public async Task<IActionResult> CreateCategory(Category category)
         {
@@ -49,8 +50,7 @@ namespace AngeCafe.API.Controllers
 
             category.CategoryName = category.CategoryName.Trim();
 
-            _context.Categories.Add(category);
-            await _context.SaveChangesAsync();
+            await _categoryService.AddAsync(category);
 
             return CreatedAtAction(
                 nameof(GetCategory),
@@ -59,54 +59,54 @@ namespace AngeCafe.API.Controllers
             );
         }
 
+        // PUT: api/Category/5
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCategory(
             int id, Category updatedCategory)
         {
-            var category = await _context.Categories.FindAsync(id);
-
-            if (category == null)
-            {
-                return NotFound("Category not found.");
-            }
-
             if (string.IsNullOrWhiteSpace(updatedCategory.CategoryName))
             {
                 return BadRequest("Category name is required.");
             }
 
-            category.CategoryName = updatedCategory.CategoryName.Trim();
+            updatedCategory.CategoryName =
+                updatedCategory.CategoryName.Trim();
 
-            await _context.SaveChangesAsync();
+            updatedCategory.CategoryId = id;
 
-            return Ok(category);
-        }
+            try
+            {
+                await _categoryService.UpdateAsync(updatedCategory);
 
-      
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCategory(int id)
-        {
-            var category = await _context.Categories.FindAsync(id);
-
-            if (category == null)
+                return Ok(await _categoryService.GetByIdAsync(id));
+            }
+            catch (KeyNotFoundException)
             {
                 return NotFound("Category not found.");
             }
+        }
 
-            bool hasMenuItems = await _context.MenuItems
-                .AnyAsync(m => m.CategoryId == id);
+        // DELETE: api/Category/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCategory(int id)
+        {
+            try
+            {
+                bool deleted = await _categoryService.DeleteAsync(id);
 
-            if (hasMenuItems)
+                if (!deleted)
+                {
+                    return NotFound("Category not found.");
+                }
+
+                return NoContent();
+            }
+            catch (InvalidOperationException)
             {
                 return BadRequest(
                     "Cannot delete a category that contains menu items."
                 );
             }
-
-            _context.Categories.Remove(category);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
     }
 }

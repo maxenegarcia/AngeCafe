@@ -1,9 +1,7 @@
-﻿
-using AngeCafe.API.Data;
-using AngeCafe.API.DTOs;
+﻿using AngeCafe.API.DTOs;
 using AngeCafe.API.Models;
+using AngeCafe.API.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace AngeCafe.API.Controllers
 {
@@ -11,53 +9,43 @@ namespace AngeCafe.API.Controllers
     [ApiController]
     public class MenuItemController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IMenuItemService _menuItemService;
 
-        public MenuItemController(AppDbContext context)
+        public MenuItemController(IMenuItemService menuItemService)
         {
-            _context = context;
+            _menuItemService = menuItemService;
         }
 
-       
+        // GET: api/MenuItem
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MenuItemResponseDto>>> GetMenuItems()
+        public async Task<ActionResult<IEnumerable<MenuItemResponseDto>>>
+            GetMenuItems()
         {
-            var items = await _context.MenuItems
-                .Include(m => m.Category)
-                .Include(m => m.Variants)
-                .ToListAsync();
+            var items = await _menuItemService.GetAllAsync();
 
             return Ok(items.Select(MapToResponse));
         }
 
+        // GET: api/MenuItem/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<MenuItemResponseDto>> GetMenuItem(int id)
+        public async Task<ActionResult<MenuItemResponseDto>>
+            GetMenuItem(int id)
         {
-            var item = await _context.MenuItems
-                .Include(m => m.Category)
-                .Include(m => m.Variants)
-                .FirstOrDefaultAsync(m => m.MenuItemId == id);
+            var item = await _menuItemService.GetByIdAsync(id);
 
             if (item == null)
-                return NotFound();
+            {
+                return NotFound("Menu item not found.");
+            }
 
             return Ok(MapToResponse(item));
         }
 
-        
+        // POST: api/MenuItem
         [HttpPost]
-        public async Task<ActionResult<MenuItemResponseDto>> CreateMenuItem(
-            MenuItemRequestDto request)
+        public async Task<ActionResult<MenuItemResponseDto>>
+            CreateMenuItem(MenuItemRequestDto request)
         {
-            var categoryExists = await _context.Categories
-                .AnyAsync(c => c.CategoryId == request.CategoryId);
-
-            if (!categoryExists)
-                return BadRequest("The selected category does not exist.");
-
-            if (request.Variants == null || !request.Variants.Any())
-                return BadRequest("A menu item must have at least one variant.");
-
             var item = new MenuItem
             {
                 CategoryId = request.CategoryId,
@@ -65,85 +53,94 @@ namespace AngeCafe.API.Controllers
                 Description = request.Description,
                 ImageUrl = request.ImageUrl,
                 IsActive = request.IsActive,
-                Variants = request.Variants.Select(v => new MenuItemVariant
-                {
-                    VariantName = v.VariantName,
-                    Price = v.Price,
-                    IsAvailable = v.IsAvailable
-                }).ToList()
+
+                Variants = request.Variants?.Select(v =>
+                    new MenuItemVariant
+                    {
+                        VariantName = v.VariantName,
+                        Price = v.Price,
+                        IsAvailable = v.IsAvailable
+                    }).ToList() ?? new List<MenuItemVariant>()
             };
 
-            _context.MenuItems.Add(item);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _menuItemService.AddAsync(item);
 
-            var createdItem = await _context.MenuItems
-                .Include(m => m.Category)
-                .Include(m => m.Variants)
-                .FirstAsync(m => m.MenuItemId == item.MenuItemId);
+                var createdItem =
+                    await _menuItemService.GetByIdAsync(item.MenuItemId);
 
-            return CreatedAtAction(
-                nameof(GetMenuItem),
-                new { id = item.MenuItemId },
-                MapToResponse(createdItem));
+                if (createdItem == null)
+                {
+                    return StatusCode(500,
+                        "Menu item was created but could not be retrieved.");
+                }
+
+                return CreatedAtAction(
+                    nameof(GetMenuItem),
+                    new { id = item.MenuItemId },
+                    MapToResponse(createdItem));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
+        // PUT: api/MenuItem/5
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateMenuItem(
             int id, MenuItemRequestDto request)
         {
-            var item = await _context.MenuItems
-                .Include(m => m.Variants)
-                .FirstOrDefaultAsync(m => m.MenuItemId == id);
-
-            if (item == null)
-                return NotFound();
-
-            var categoryExists = await _context.Categories
-                .AnyAsync(c => c.CategoryId == request.CategoryId);
-
-            if (!categoryExists)
-                return BadRequest("The selected category does not exist.");
-
-            if (request.Variants == null || !request.Variants.Any())
-                return BadRequest("A menu item must have at least one variant.");
-
-            item.CategoryId = request.CategoryId;
-            item.ItemName = request.ItemName;
-            item.Description = request.Description;
-            item.ImageUrl = request.ImageUrl;
-            item.IsActive = request.IsActive;
-
-            _context.MenuItemVariants.RemoveRange(item.Variants);
-
-            item.Variants = request.Variants.Select(v => new MenuItemVariant
+            var item = new MenuItem
             {
-                VariantName = v.VariantName,
-                Price = v.Price,
-                IsAvailable = v.IsAvailable
-            }).ToList();
+                MenuItemId = id,
+                CategoryId = request.CategoryId,
+                ItemName = request.ItemName,
+                Description = request.Description,
+                ImageUrl = request.ImageUrl,
+                IsActive = request.IsActive,
 
-            await _context.SaveChangesAsync();
+                Variants = request.Variants?.Select(v =>
+                    new MenuItemVariant
+                    {
+                        VariantName = v.VariantName,
+                        Price = v.Price,
+                        IsAvailable = v.IsAvailable
+                    }).ToList() ?? new List<MenuItemVariant>()
+            };
 
-            return NoContent();
+            try
+            {
+                await _menuItemService.UpdateAsync(item);
+
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound("Menu item not found.");
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        
+        // DELETE: api/MenuItem/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeactivateMenuItem(int id)
         {
-            var item = await _context.MenuItems
-                .FirstOrDefaultAsync(m => m.MenuItemId == id);
+            bool deleted = await _menuItemService.DeleteAsync(id);
 
-            if (item == null)
-                return NotFound();
-
-            item.IsActive = false;
-
-            await _context.SaveChangesAsync();
+            if (!deleted)
+            {
+                return NotFound("Menu item not found.");
+            }
 
             return NoContent();
         }
 
+        // Mapping
         private static MenuItemResponseDto MapToResponse(MenuItem item)
         {
             return new MenuItemResponseDto
@@ -155,13 +152,15 @@ namespace AngeCafe.API.Controllers
                 Description = item.Description,
                 ImageUrl = item.ImageUrl,
                 IsActive = item.IsActive,
-                Variants = item.Variants.Select(v => new MenuItemVariantResponseDto
-                {
-                    VariantId = v.VariantId,
-                    VariantName = v.VariantName,
-                    Price = v.Price,
-                    IsAvailable = v.IsAvailable
-                }).ToList()
+
+                Variants = item.Variants.Select(v =>
+                    new MenuItemVariantResponseDto
+                    {
+                        VariantId = v.VariantId,
+                        VariantName = v.VariantName,
+                        Price = v.Price,
+                        IsAvailable = v.IsAvailable
+                    }).ToList()
             };
         }
     }
