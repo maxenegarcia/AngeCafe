@@ -1,5 +1,4 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -15,13 +14,14 @@
         }
 
         :root {
-            --marian-blue: #DDECF8;
-            --gold: #C9A64D;
-            --deep-blue: #091957;
-            --navy: #263B59;
+            --black: #111111;
+            --gold: #D4AF37;
+            --gold-dark: #A17A20;
             --white: #FFFFFF;
-            --light-bg: #F5F8FC;
-            --text: #263449;
+            --light-bg: #F8F8F8;
+            --text: #333333;
+            --gray: #777777;
+            --border: #E5E5E5;
         }
 
         body {
@@ -29,41 +29,54 @@
             color: var(--text);
         }
 
-        /* NAVIGATION */
+        /* HEADER */
 
-        .navbar {
-            background: var(--deep-blue);
-            padding: 18px 6%;
+        .main-header {
+            background-color: var(--black);
+            padding: 20px 7%;
+            border-bottom: 3px solid var(--gold);
+        }
+
+        .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            border-bottom: 4px solid var(--gold);
+            max-width: 1200px;
+            margin: auto;
         }
 
-        .navbar-brand {
-            color: white;
-            font-size: 21px;
+        .brand h1 {
+            color: var(--white);
+            font-size: 28px;
             font-weight: bold;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
         }
 
-        .nav-links {
-            display: flex;
-            gap: 25px;
-            flex-wrap: wrap;
-        }
-
-            .nav-links a {
-                color: white;
-                text-decoration: none;
-                font-size: 14px;
-                font-weight: bold;
-                transition: 0.2s;
+            .brand h1 span {
+                color: var(--gold);
             }
 
-                .nav-links a:hover {
+        .brand p {
+            color: var(--gold);
+            font-size: 11px;
+            letter-spacing: 3px;
+            margin-top: 4px;
+        }
+
+        .navigation {
+            display: flex;
+            gap: 30px;
+        }
+
+            .navigation a {
+                color: var(--white);
+                text-decoration: none;
+                font-size: 13px;
+                font-weight: bold;
+                transition: 0.3s;
+            }
+
+                .navigation a:hover {
                     color: var(--gold);
                 }
 
@@ -82,7 +95,7 @@
         }
 
             .intro h1 {
-                color: var(--deep-blue);
+                color: var(--black);
                 font-size: 34px;
                 letter-spacing: 2px;
                 margin-bottom: 10px;
@@ -97,8 +110,9 @@
         }
 
         .intro p {
-            color: #68778B;
+            color: var(--gray);
             font-size: 15px;
+            line-height: 1.6;
         }
 
         /* CATEGORY BUTTONS */
@@ -112,11 +126,11 @@
         }
 
         .category-btn {
-            border: 1px solid #C5D5E5;
-            background: white;
-            color: var(--deep-blue);
+            border: 1px solid #D5D5D5;
+            background: var(--white);
+            color: var(--black);
             padding: 11px 19px;
-            border-radius: 6px;
+            border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
             font-size: 13px;
@@ -125,9 +139,9 @@
 
             .category-btn:hover,
             .category-btn.active {
-                background: var(--deep-blue);
-                color: white;
-                border-color: var(--deep-blue);
+                background: var(--black);
+                color: var(--white);
+                border-color: var(--black);
             }
 
             .category-btn.active {
@@ -143,28 +157,28 @@
         }
 
         .menu-card {
-            background: white;
-            border: 1px solid #E0E8F0;
+            background: var(--white);
+            border: 1px solid var(--border);
             border-top: 4px solid var(--gold);
             border-radius: 8px;
             padding: 24px;
-            box-shadow: 0 3px 12px rgba(9, 25, 87, 0.06);
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
             .menu-card:hover {
                 transform: translateY(-4px);
-                box-shadow: 0 7px 18px rgba(9, 25, 87, 0.12);
+                box-shadow: 0 7px 18px rgba(0, 0, 0, 0.12);
             }
 
             .menu-card h3 {
-                color: var(--deep-blue);
+                color: var(--black);
                 font-size: 19px;
                 margin-bottom: 10px;
             }
 
             .menu-card p {
-                color: #718096;
+                color: var(--gray);
                 font-size: 14px;
                 line-height: 1.5;
                 margin-bottom: 18px;
@@ -174,10 +188,10 @@
         .variant-select {
             width: 100%;
             padding: 11px;
-            border: 1px solid #C9D7E5;
+            border: 1px solid #D5D5D5;
             border-radius: 5px;
-            background: #F8FBFE;
-            color: var(--navy);
+            background: #FAFAFA;
+            color: var(--black);
             margin-bottom: 15px;
             outline: none;
             cursor: pointer;
@@ -190,7 +204,7 @@
         .price {
             font-size: 23px;
             font-weight: bold;
-            color: #A17A20;
+            color: var(--gold-dark);
         }
 
         .unavailable {
@@ -204,7 +218,7 @@
         .status-message {
             text-align: center;
             padding: 30px;
-            color: #68778B;
+            color: var(--gray);
             font-size: 15px;
         }
 
@@ -213,8 +227,8 @@
         footer {
             margin-top: 60px;
             padding: 25px 15px;
-            background: var(--deep-blue);
-            color: white;
+            background: var(--black);
+            color: var(--white);
             text-align: center;
             border-top: 4px solid var(--gold);
         }
@@ -225,18 +239,20 @@
             }
 
             footer span {
-                color: #E7C76C;
+                color: var(--gold);
+                font-weight: bold;
             }
 
         /* MOBILE RESPONSIVENESS */
 
         @media (max-width: 600px) {
-            .navbar {
+            .header-content {
                 flex-direction: column;
+                gap: 18px;
                 text-align: center;
             }
 
-            .nav-links {
+            .navigation {
                 justify-content: center;
                 gap: 18px;
             }
@@ -253,24 +269,42 @@
             .menu-grid {
                 grid-template-columns: 1fr;
             }
+
+            .categories {
+                gap: 8px;
+            }
+
+            .category-btn {
+                padding: 10px 13px;
+                font-size: 12px;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <!-- NAVIGATION -->
-    <nav class="navbar">
-        <div class="navbar-brand">ANGE CAFE</div>
+    <!-- ANGE CAFE HEADER -->
 
-        <div class="nav-links">
-            <a href="#home">HOME</a>
-            <a href="#menu">MENU</a>
-            <a href="#footer">ABOUT</a>
+    <header class="main-header">
+        <div class="header-content">
+
+            <div class="brand">
+                <h1>ANGE <span>CAFE</span></h1>
+                <p>UST ANGELICUM</p>
+            </div>
+
+            <nav class="navigation">
+                <a href="#home">HOME</a>
+                <a href="#menu">MENU</a>
+                <a href="#footer">ABOUT</a>
+            </nav>
+
         </div>
-    </nav>
+    </header>
 
     <!-- MENU CONTENT -->
+
     <main class="container" id="home">
 
         <section class="intro" id="menu">
@@ -283,6 +317,7 @@
         </section>
 
         <!-- MENU CATEGORIES -->
+
         <div class="categories" id="categories">
             <button class="category-btn active" onclick="showAll(this)">
                 All Items
@@ -290,20 +325,25 @@
         </div>
 
         <!-- LOADING STATUS -->
+
         <div id="status" class="status-message">
             Loading menu...
         </div>
 
         <!-- MENU ITEMS -->
+
         <section class="menu-grid" id="menuGrid"></section>
 
     </main>
 
     <!-- FOOTER -->
+
     <footer id="footer">
         <p><span>ANGE CAFE</span> | UST Angelicum College</p>
         <p>© 2026 Ange Cafe. All Rights Reserved.</p>
     </footer>
+
+    <!-- JAVASCRIPT -->
 
     <script>
         const menuGrid = document.getElementById("menuGrid");
