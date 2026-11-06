@@ -31,6 +31,14 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider
+        .GetRequiredService<AppDbContext>();
+
+    await MenuSeeder.SeedAsync(context);
+}
+
 // Swagger Configuration
 app.UseSwagger();
 app.UseSwaggerUI();
