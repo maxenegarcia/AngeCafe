@@ -13,5 +13,14 @@ namespace AngeCafe.API.Data
         public DbSet<Category> Categories { get; set; }
 
         public DbSet<MenuItem> MenuItems { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<MenuItem>()
+                .Property(m => m.Price)
+                .HasPrecision(10, 2);
+        }
     }
 }
