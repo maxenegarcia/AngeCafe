@@ -60,17 +60,33 @@ namespace AngeCafe.API.Services
             existingItem.ImageUrl = menuItem.ImageUrl;
             existingItem.IsActive = menuItem.IsActive;
 
-            // Replace existing variants
-            existingItem.Variants.Clear();
-
+            // Update existing variants instead of deleting them
             foreach (var variant in menuItem.Variants)
             {
-                existingItem.Variants.Add(new MenuItemVariant
+                var variantName = variant.VariantName.Trim();
+
+                var existingVariant = existingItem.Variants
+                    .FirstOrDefault(v =>
+                        v.VariantName.Equals(
+                            variantName,
+                            StringComparison.OrdinalIgnoreCase));
+
+                if (existingVariant != null)
                 {
-                    VariantName = variant.VariantName.Trim(),
-                    Price = variant.Price,
-                    IsAvailable = variant.IsAvailable
-                });
+                    existingVariant.VariantName = variantName;
+                    existingVariant.Price = variant.Price;
+                    existingVariant.IsAvailable = variant.IsAvailable;
+                }
+                else
+                {
+                    existingItem.Variants.Add(new MenuItemVariant
+                    {
+                        MenuItemId = existingItem.MenuItemId,
+                        VariantName = variantName,
+                        Price = variant.Price,
+                        IsAvailable = variant.IsAvailable
+                    });
+                }
             }
 
             await _repository.UpdateAsync(existingItem);
@@ -85,7 +101,7 @@ namespace AngeCafe.API.Services
                 return false;
             }
 
-            // Soft delete: deactivate the menu item.
+            // Soft delete: deactivate the menu item
             menuItem.IsActive = false;
 
             await _repository.UpdateAsync(menuItem);
