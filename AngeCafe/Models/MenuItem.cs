@@ -10,15 +10,15 @@
 
         public string? Description { get; set; }
 
-        public decimal Price { get; set; }
-
         public string? ImageUrl { get; set; }
-
-        public bool IsAvailable { get; set; } = true;
 
         public bool IsActive { get; set; } = true;
 
-        // Each menu item belongs to one category
+        // Relationship with Category
         public Category? Category { get; set; }
+
+        // One menu item can have multiple variants
+        public ICollection<MenuItemVariant> Variants { get; set; }
+            = new List<MenuItemVariant>();
     }
 }

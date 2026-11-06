@@ -1,0 +1,932 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ange Cafe | Admin Menu</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        :root {
+            --blue: #091957;
+            --gold: #C9A64D;
+            --background: #F5F8FC;
+            --text: #263449;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text);
+        }
+
+        .navbar {
+            background: var(--blue);
+            color: white;
+            padding: 20px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid var(--gold);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .brand {
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .heading {
+            margin-bottom: 25px;
+        }
+
+            .heading h1 {
+                color: var(--blue);
+                margin-bottom: 8px;
+            }
+
+            .heading p {
+                color: #68778B;
+                font-size: 14px;
+            }
+
+        .gold-line {
+            width: 65px;
+            height: 4px;
+            background: var(--gold);
+            margin-top: 15px;
+        }
+
+        .panel {
+            background: white;
+            padding: 25px;
+            border: 1px solid #E0E8F0;
+            border-radius: 7px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 10px rgba(9,25,87,.05);
+        }
+
+            .panel h2 {
+                color: var(--blue);
+                font-size: 19px;
+                margin-bottom: 20px;
+            }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 17px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+            .field.full {
+                grid-column: 1 / -1;
+            }
+
+        label {
+            font-size: 13px;
+            font-weight: bold;
+            color: var(--blue);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #C9D7E5;
+            border-radius: 5px;
+            font-size: 14px;
+            outline: none;
+        }
+
+            input:focus, select:focus, textarea:focus {
+                border-color: var(--gold);
+            }
+
+        textarea {
+            resize: vertical;
+            min-height: 75px;
+        }
+
+        .checkbox-field {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-top: 20px;
+        }
+
+            .checkbox-field input {
+                width: auto;
+            }
+
+            .checkbox-field label {
+                font-weight: normal;
+            }
+
+        .variant-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 25px 0 12px;
+            gap: 10px;
+        }
+
+            .variant-header h3 {
+                color: var(--blue);
+                font-size: 16px;
+            }
+
+        .variant-row {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr auto;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 12px;
+            background: #F5F8FC;
+            border: 1px solid #E0E8F0;
+            border-radius: 5px;
+        }
+
+            .variant-row .available-check {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 12px;
+            }
+
+                .variant-row .available-check input {
+                    width: auto;
+                }
+
+        button {
+            border: none;
+            border-radius: 5px;
+            padding: 11px 17px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            transition: .2s;
+        }
+
+        .primary-btn {
+            background: var(--blue);
+            color: white;
+        }
+
+            .primary-btn:hover {
+                background: #172d70;
+            }
+
+        .gold-btn {
+            background: var(--gold);
+            color: white;
+        }
+
+        .remove-btn {
+            background: #B33A3A;
+            color: white;
+            padding: 9px 12px;
+        }
+
+        .edit-btn {
+            background: #E8F0FA;
+            color: var(--blue);
+        }
+
+        .deactivate-btn {
+            background: #FCE8E8;
+            color: #A52D2D;
+        }
+
+        .activate-btn {
+            background: #E3F5E8;
+            color: #237A3B;
+        }
+
+        .actions {
+            display: flex;
+            gap: 9px;
+            flex-wrap: wrap;
+            margin-top: 22px;
+        }
+
+        .cancel-btn {
+            background: #E7EAF0;
+            color: #333;
+        }
+
+        .menu-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+        }
+
+        .menu-card {
+            background: white;
+            border: 1px solid #E0E8F0;
+            border-top: 4px solid var(--gold);
+            border-radius: 7px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(9,25,87,.05);
+        }
+
+            .menu-card h3 {
+                color: var(--blue);
+                margin-bottom: 8px;
+            }
+
+            .menu-card p {
+                color: #68778B;
+                font-size: 13px;
+                margin-bottom: 10px;
+            }
+
+            .menu-card ul {
+                list-style: none;
+                margin: 12px 0;
+            }
+
+            .menu-card li {
+                font-size: 13px;
+                padding: 6px 0;
+                border-bottom: 1px solid #EDF0F4;
+            }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .status {
+            font-size: 13px;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .success {
+            display: block;
+            background: #E3F5E8;
+            color: #237A3B;
+        }
+
+        .error {
+            display: block;
+            background: #FCE8E8;
+            color: #A52D2D;
+        }
+
+        .inactive {
+            opacity: .65;
+        }
+
+        .empty {
+            color: #68778B;
+            text-align: center;
+            padding: 25px;
+        }
+
+        footer {
+            background: var(--blue);
+            color: white;
+            text-align: center;
+            padding: 22px;
+            border-top: 4px solid var(--gold);
+            font-size: 13px;
+        }
+
+        @media(max-width: 650px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .field.full {
+                grid-column: auto;
+            }
+
+            .variant-row {
+                grid-template-columns: 1fr 1fr;
+            }
+
+                .variant-row .available-check {
+                    grid-column: 1;
+                }
+
+                .variant-row .remove-btn {
+                    grid-column: 2;
+                }
+
+            .navbar {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="brand">ANGE CAFE | ADMIN</div>
+        <a href="/menu.html">VIEW CUSTOMER MENU</a>
+    </nav>
+
+    <main class="container">
+
+        <div class="heading">
+            <h1>Menu Management</h1>
+            <p>Add, edit, and manage Ange Cafe menu items and prices.</p>
+            <div class="gold-line"></div>
+        </div>
+
+        <div id="message" class="status"></div>
+
+        <!-- ADD / EDIT FORM -->
+        <section class="panel">
+
+            <h2 id="formTitle">Add New Menu Item</h2>
+
+            <form id="menuForm">
+
+                <div class="form-grid">
+
+                    <div class="field">
+                        <label for="itemName">Item Name</label>
+                        <input type="text" id="itemName"
+                               placeholder="Enter item name" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="categoryId">Category</label>
+                        <select id="categoryId" required>
+                            <option value="">Select Category</option>
+                        </select>
+                    </div>
+
+                    <div class="field full">
+                        <label for="description">Description</label>
+                        <textarea id="description"
+                                  placeholder="Enter item description"></textarea>
+                    </div>
+
+                    <div class="field full">
+                        <label for="imageUrl">Image URL (Optional)</label>
+                        <input type="text" id="imageUrl"
+                               placeholder="Enter image URL">
+                    </div>
+
+                </div>
+
+                <div class="checkbox-field">
+                    <input type="checkbox" id="isActive" checked>
+                    <label for="isActive">Menu item is active</label>
+                </div>
+
+                <div class="variant-header">
+                    <h3>Menu Item Variants</h3>
+                    <button type="button" class="gold-btn"
+                            onclick="addVariantRow()">
+                        + Add Variant
+                    </button>
+                </div>
+
+                <div id="variantContainer"></div>
+
+                <div class="actions">
+                    <button type="submit" class="primary-btn" id="saveBtn">
+                        Save Menu Item
+                    </button>
+
+                    <button type="button" class="cancel-btn"
+                            onclick="resetForm()">
+                        Clear Form
+                    </button>
+                </div>
+
+            </form>
+        </section>
+
+        <!-- MENU ITEM LIST -->
+        <<section class="panel">
+    <h2>Existing Menu Items</h2>
+
+    <div class="form-grid" style="margin-bottom:20px;">
+
+        <div class="field">
+            <label for="searchItem">Search Menu Item</label>
+            <input
+                type="text"
+                id="searchItem"
+                placeholder="Search by item name..."
+                oninput="displayItems()">
+        </div>
+
+        <div class="field">
+            <label for="filterCategory">Filter by Category</label>
+            <select id="filterCategory" onchange="displayItems()">
+                <option value="All">All Categories</option>
+            </select>
+        </div>
+
+    </div>
+
+    <div id="menuList" class="menu-list">
+        <p class="empty">Loading menu items...</p>
+    </div>
+</section>
+
+    </main>
+
+    <footer>
+        <p>ANGE CAFE | Menu Management System</p>
+        <p>© 2026 Ange Cafe. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+
+        const API_URL = "/api/MenuItem";
+        const CATEGORY_URL = "/api/Category";
+
+        let categories = [];
+        let menuItems = [];
+        let editingId = null;
+
+        const form = document.getElementById("menuForm");
+        const variantContainer =
+            document.getElementById("variantContainer");
+
+        const menuList = document.getElementById("menuList");
+        const message = document.getElementById("message");
+
+        // LOAD CATEGORIES AND MENU ITEMS
+
+        async function initializePage() {
+            try {
+                const [categoryResponse, menuResponse] =
+                    await Promise.all([
+                        fetch(CATEGORY_URL),
+                        fetch(API_URL)
+                    ]);
+
+                if (!categoryResponse.ok || !menuResponse.ok) {
+                    throw new Error("Unable to load data from the API.");
+                }
+
+                categories = await categoryResponse.json();
+                menuItems = await menuResponse.json();
+
+                populateCategories();
+                displayItems();
+
+                addVariantRow();
+
+            } catch (error) {
+                showMessage(error.message, "error");
+                menuList.innerHTML =
+                    '<p class="empty">Unable to load menu items.</p>';
+                console.error(error);
+            }
+        }
+
+        // POPULATE CATEGORY DROPDOWNS
+
+        function populateCategories() {
+            const categorySelect =
+                document.getElementById("categoryId");
+
+            const filterSelect =
+                document.getElementById("filterCategory");
+
+            categorySelect.innerHTML =
+                '<option value="">Select Category</option>';
+
+            filterSelect.innerHTML =
+                '<option value="All">All Categories</option>';
+
+            categories.forEach(category => {
+                const option1 = document.createElement("option");
+                option1.value = category.categoryId;
+                option1.textContent = category.categoryName;
+                categorySelect.appendChild(option1);
+
+                const option2 = document.createElement("option");
+                option2.value = category.categoryId;
+                option2.textContent = category.categoryName;
+                filterSelect.appendChild(option2);
+            });
+        }
+
+        // ADD VARIANT INPUT ROW
+
+        function addVariantRow(name = "", price = "", available = true) {
+            const row = document.createElement("div");
+            row.className = "variant-row";
+
+            const nameInput = document.createElement("input");
+            nameInput.type = "text";
+            nameInput.className = "variant-name";
+            nameInput.placeholder = "Variant name (e.g. Hot)";
+            nameInput.value = name;
+            nameInput.required = true;
+
+            const priceInput = document.createElement("input");
+            priceInput.type = "number";
+            priceInput.className = "variant-price";
+            priceInput.placeholder = "Price";
+            priceInput.min = "0.01";
+            priceInput.step = "0.01";
+            priceInput.value = price;
+            priceInput.required = true;
+
+            const checkLabel = document.createElement("label");
+            checkLabel.className = "available-check";
+
+            const checkInput = document.createElement("input");
+            checkInput.type = "checkbox";
+            checkInput.className = "variant-available";
+            checkInput.checked = available;
+
+            checkLabel.appendChild(checkInput);
+            checkLabel.append(" Available");
+
+            const removeButton = document.createElement("button");
+            removeButton.type = "button";
+            removeButton.className = "remove-btn";
+            removeButton.textContent = "Remove";
+
+            removeButton.onclick = () => {
+                row.remove();
+            };
+
+            row.appendChild(nameInput);
+            row.appendChild(priceInput);
+            row.appendChild(checkLabel);
+            row.appendChild(removeButton);
+
+            variantContainer.appendChild(row);
+        }
+
+        // GET VARIANTS FROM FORM
+
+        function getVariantsFromForm() {
+            const rows =
+                document.querySelectorAll(".variant-row");
+
+            return Array.from(rows).map(row => ({
+                variantName:
+                    row.querySelector(".variant-name").value.trim(),
+
+                price:
+                    Number(row.querySelector(".variant-price").value),
+
+                isAvailable:
+                    row.querySelector(".variant-available").checked
+            }));
+        }
+
+        // SAVE NEW OR UPDATED MENU ITEM
+
+        form.addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const variants = getVariantsFromForm();
+
+            if (variants.length === 0) {
+                showMessage("Please add at least one variant.", "error");
+                return;
+            }
+
+            if (variants.some(v =>
+                !v.variantName || !Number.isFinite(v.price) || v.price <= 0
+            )) {
+                showMessage(
+                    "Please provide a valid name and positive price for every variant.",
+                    "error"
+                );
+                return;
+            }
+
+            const request = {
+                categoryId: Number(
+                    document.getElementById("categoryId").value
+                ),
+
+                itemName:
+                    document.getElementById("itemName").value.trim(),
+
+                description:
+                    document.getElementById("description").value.trim() || null,
+
+                imageUrl:
+                    document.getElementById("imageUrl").value.trim() || null,
+
+                isActive:
+                    document.getElementById("isActive").checked,
+
+                variants: variants
+            };
+
+            if (!request.categoryId || !request.itemName) {
+                showMessage("Please complete all required fields.", "error");
+                return;
+            }
+
+            const saveBtn = document.getElementById("saveBtn");
+            saveBtn.disabled = true;
+            saveBtn.textContent = "Saving...";
+
+            try {
+                const url = editingId
+                    ? `${API_URL}/${editingId}`
+                    : API_URL;
+
+                const method = editingId ? "PUT" : "POST";
+
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(request)
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText || "Unable to save menu item.");
+                }
+
+                showMessage(
+                    editingId
+                        ? "Menu item updated successfully!"
+                        : "New menu item added successfully!",
+                    "success"
+                );
+
+                resetForm();
+                await refreshMenu();
+
+            } catch (error) {
+                showMessage(error.message, "error");
+                console.error(error);
+
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = "Save Menu Item";
+            }
+        });
+
+        // REFRESH MENU ITEMS
+
+        async function refreshMenu() {
+            const response = await fetch(API_URL);
+
+            if (!response.ok) {
+                throw new Error("Unable to refresh menu items.");
+            }
+
+            menuItems = await response.json();
+            displayItems();
+        }
+
+        // DISPLAY MENU ITEMS
+
+        function displayItems() {
+            menuList.innerHTML = "";
+
+            const selectedFilter =
+                document.getElementById("filterCategory").value;
+
+            const searchText =
+                document.getElementById("searchItem").value
+                    .trim()
+                    .toLowerCase();
+
+            const filteredItems = menuItems.filter(item => {
+                const matchesCategory =
+                    selectedFilter === "All" ||
+                    Number(item.categoryId) === Number(selectedFilter);
+
+                const matchesSearch =
+                    item.itemName.toLowerCase().includes(searchText);
+
+                return matchesCategory && matchesSearch;
+            });
+
+            if (filteredItems.length === 0) {
+                menuList.innerHTML =
+                    '<p class="empty">No matching menu items found.</p>';
+                return;
+            }
+
+            filteredItems.forEach(item => {
+                const card = document.createElement("article");
+                card.className = "menu-card";
+
+                if (!item.isActive) {
+                    card.classList.add("inactive");
+                }
+
+                const title = document.createElement("h3");
+                title.textContent = item.itemName;
+
+                const category = document.createElement("p");
+                category.textContent = item.categoryName || "Uncategorized";
+
+                const description = document.createElement("p");
+                description.textContent = item.description || "No description";
+
+                const status = document.createElement("p");
+                status.textContent = item.isActive ? "Active" : "Inactive";
+
+                const variantList = document.createElement("ul");
+
+                (item.variants || []).forEach(variant => {
+                    const li = document.createElement("li");
+
+                    li.textContent =
+                        `${variant.variantName} — ₱${Number(variant.price).toFixed(2)} — ` +
+                        (variant.isAvailable ? "Available" : "Unavailable");
+
+                    variantList.appendChild(li);
+                });
+
+                const buttons = document.createElement("div");
+                buttons.className = "card-actions";
+
+                const editButton = document.createElement("button");
+                editButton.className = "edit-btn";
+                editButton.textContent = "Edit";
+                editButton.onclick = () => editItem(item.menuItemId);
+
+                const statusButton = document.createElement("button");
+
+                if (item.isActive) {
+                    statusButton.className = "deactivate-btn";
+                    statusButton.textContent = "Deactivate";
+                    statusButton.onclick = () =>
+                        deactivateItem(item.menuItemId);
+                } else {
+                    statusButton.className = "activate-btn";
+                    statusButton.textContent = "Activate";
+                    statusButton.onclick = () =>
+                        editItem(item.menuItemId);
+                }
+
+                buttons.appendChild(editButton);
+                buttons.appendChild(statusButton);
+
+                card.appendChild(title);
+                card.appendChild(category);
+                card.appendChild(description);
+                card.appendChild(status);
+                card.appendChild(variantList);
+                card.appendChild(buttons);
+
+                menuList.appendChild(card);
+            });
+        }
+
+        // EDIT MENU ITEM
+
+        function editItem(id) {
+            const item = menuItems.find(
+                m => m.menuItemId === id
+            );
+
+            if (!item) return;
+
+            editingId = id;
+
+            document.getElementById("formTitle").textContent =
+                "Edit Menu Item";
+
+            document.getElementById("itemName").value =
+                item.itemName;
+
+            document.getElementById("categoryId").value =
+                item.categoryId;
+
+            document.getElementById("description").value =
+                item.description || "";
+
+            document.getElementById("imageUrl").value =
+                item.imageUrl || "";
+
+            document.getElementById("isActive").checked =
+                item.isActive;
+
+            variantContainer.innerHTML = "";
+
+            (item.variants || []).forEach(variant => {
+                addVariantRow(
+                    variant.variantName,
+                    variant.price,
+                    variant.isAvailable
+                );
+            });
+
+            if (!item.variants || item.variants.length === 0) {
+                addVariantRow();
+            }
+
+            document.getElementById("saveBtn").textContent =
+                "Update Menu Item";
+
+            document.getElementById("formTitle").scrollIntoView({
+                behavior: "smooth"
+            });
+        }
+
+        // DEACTIVATE MENU ITEM
+
+        async function deactivateItem(id) {
+            const confirmed = confirm(
+                "Are you sure you want to deactivate this menu item?"
+            );
+
+            if (!confirmed) return;
+
+            try {
+                const response = await fetch(`${API_URL}/${id}`, {
+                    method: "DELETE"
+                });
+
+                if (!response.ok) {
+                    throw new Error("Unable to deactivate menu item.");
+                }
+
+                showMessage(
+                    "Menu item deactivated successfully!",
+                    "success"
+                );
+
+                await refreshMenu();
+
+            } catch (error) {
+                showMessage(error.message, "error");
+            }
+        }
+
+        // RESET FORM
+
+        function resetForm() {
+            form.reset();
+            editingId = null;
+
+            document.getElementById("formTitle").textContent =
+                "Add New Menu Item";
+
+            document.getElementById("saveBtn").textContent =
+                "Save Menu Item";
+
+            variantContainer.innerHTML = "";
+            addVariantRow();
+
+        }
+
+        // SHOW MESSAGE
+
+        function showMessage(text, type) {
+            message.textContent = text;
+            message.className = "status " + type;
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        }
+
+        // START PAGE
+
+        initializePage();
+
+    </script>
+
+</body>
+</html>

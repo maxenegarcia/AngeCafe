@@ -1,0 +1,467 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ange Cafe | Menu</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        :root {
+            --marian-blue: #DDECF8;
+            --gold: #C9A64D;
+            --deep-blue: #091957;
+            --navy: #263B59;
+            --white: #FFFFFF;
+            --light-bg: #F5F8FC;
+            --text: #263449;
+        }
+
+        body {
+            background: var(--light-bg);
+            color: var(--text);
+        }
+
+        /* NAVIGATION */
+
+        .navbar {
+            background: var(--deep-blue);
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            border-bottom: 4px solid var(--gold);
+        }
+
+        .navbar-brand {
+            color: white;
+            font-size: 21px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+            .nav-links a {
+                color: white;
+                text-decoration: none;
+                font-size: 14px;
+                font-weight: bold;
+                transition: 0.2s;
+            }
+
+                .nav-links a:hover {
+                    color: var(--gold);
+                }
+
+        /* MAIN CONTENT */
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 25px;
+            min-height: 450px;
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+            .intro h1 {
+                color: var(--deep-blue);
+                font-size: 34px;
+                letter-spacing: 2px;
+                margin-bottom: 10px;
+            }
+
+        .gold-line {
+            width: 75px;
+            height: 4px;
+            background: var(--gold);
+            margin: 15px auto;
+            border-radius: 5px;
+        }
+
+        .intro p {
+            color: #68778B;
+            font-size: 15px;
+        }
+
+        /* CATEGORY BUTTONS */
+
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 35px;
+        }
+
+        .category-btn {
+            border: 1px solid #C5D5E5;
+            background: white;
+            color: var(--deep-blue);
+            padding: 11px 19px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            transition: 0.2s;
+        }
+
+            .category-btn:hover,
+            .category-btn.active {
+                background: var(--deep-blue);
+                color: white;
+                border-color: var(--deep-blue);
+            }
+
+            .category-btn.active {
+                border-bottom: 3px solid var(--gold);
+            }
+
+        /* MENU CARDS */
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 22px;
+        }
+
+        .menu-card {
+            background: white;
+            border: 1px solid #E0E8F0;
+            border-top: 4px solid var(--gold);
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 3px 12px rgba(9, 25, 87, 0.06);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+            .menu-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 7px 18px rgba(9, 25, 87, 0.12);
+            }
+
+            .menu-card h3 {
+                color: var(--deep-blue);
+                font-size: 19px;
+                margin-bottom: 10px;
+            }
+
+            .menu-card p {
+                color: #718096;
+                font-size: 14px;
+                line-height: 1.5;
+                margin-bottom: 18px;
+                min-height: 20px;
+            }
+
+        .variant-select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #C9D7E5;
+            border-radius: 5px;
+            background: #F8FBFE;
+            color: var(--navy);
+            margin-bottom: 15px;
+            outline: none;
+            cursor: pointer;
+        }
+
+            .variant-select:focus {
+                border-color: var(--gold);
+            }
+
+        .price {
+            font-size: 23px;
+            font-weight: bold;
+            color: #A17A20;
+        }
+
+        .unavailable {
+            color: #B33A3A;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        /* STATUS */
+
+        .status-message {
+            text-align: center;
+            padding: 30px;
+            color: #68778B;
+            font-size: 15px;
+        }
+
+        /* FOOTER */
+
+        footer {
+            margin-top: 60px;
+            padding: 25px 15px;
+            background: var(--deep-blue);
+            color: white;
+            text-align: center;
+            border-top: 4px solid var(--gold);
+        }
+
+            footer p {
+                font-size: 13px;
+                line-height: 1.7;
+            }
+
+            footer span {
+                color: #E7C76C;
+            }
+
+        /* MOBILE RESPONSIVENESS */
+
+        @media (max-width: 600px) {
+            .navbar {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .nav-links {
+                justify-content: center;
+                gap: 18px;
+            }
+
+            .intro h1 {
+                font-size: 27px;
+            }
+
+            .container {
+                margin-top: 30px;
+                padding: 0 15px;
+            }
+
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVIGATION -->
+    <nav class="navbar">
+        <div class="navbar-brand">ANGE CAFE</div>
+
+        <div class="nav-links">
+            <a href="#home">HOME</a>
+            <a href="#menu">MENU</a>
+            <a href="#footer">ABOUT</a>
+        </div>
+    </nav>
+
+    <!-- MENU CONTENT -->
+    <main class="container" id="home">
+
+        <section class="intro" id="menu">
+            <h1>ANGE CAFE</h1>
+            <div class="gold-line"></div>
+            <p>Restaurant Ordering and Menu Management System</p>
+            <p style="margin-top: 8px;">
+                Discover your favorite drinks and treats.
+            </p>
+        </section>
+
+        <!-- MENU CATEGORIES -->
+        <div class="categories" id="categories">
+            <button class="category-btn active" onclick="showAll(this)">
+                All Items
+            </button>
+        </div>
+
+        <!-- LOADING STATUS -->
+        <div id="status" class="status-message">
+            Loading menu...
+        </div>
+
+        <!-- MENU ITEMS -->
+        <section class="menu-grid" id="menuGrid"></section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer id="footer">
+        <p><span>ANGE CAFE</span> | UST Angelicum College</p>
+        <p>© 2026 Ange Cafe. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        const menuGrid = document.getElementById("menuGrid");
+        const categoriesContainer = document.getElementById("categories");
+        const statusMessage = document.getElementById("status");
+
+        let menuItems = [];
+        let selectedCategory = "All";
+
+        async function loadMenu() {
+            try {
+                const [categoryResponse, menuResponse] = await Promise.all([
+                    fetch("/api/Category"),
+                    fetch("/api/MenuItem")
+                ]);
+
+                if (!categoryResponse.ok || !menuResponse.ok) {
+                    throw new Error("Unable to retrieve menu data.");
+                }
+
+                const categories = await categoryResponse.json();
+                menuItems = await menuResponse.json();
+
+                categoriesContainer.innerHTML = `
+                        <button class="category-btn active" onclick="showAll(this)">
+                            All Items
+                        </button>
+                    `;
+
+                categories.forEach(category => {
+                    const button = document.createElement("button");
+
+                    button.className = "category-btn";
+                    button.textContent = category.categoryName;
+
+                    button.onclick = () => {
+                        selectedCategory = category.categoryId;
+
+                        document.querySelectorAll(".category-btn")
+                            .forEach(btn => btn.classList.remove("active"));
+
+                        button.classList.add("active");
+                        displayMenu();
+                    };
+
+                    categoriesContainer.appendChild(button);
+                });
+
+                displayMenu();
+
+            } catch (error) {
+                statusMessage.textContent =
+                    "Unable to load menu. Please check your API.";
+                console.error(error);
+            }
+        }
+
+        function showAll(button) {
+            selectedCategory = "All";
+
+            document.querySelectorAll(".category-btn")
+                .forEach(btn => btn.classList.remove("active"));
+
+            button.classList.add("active");
+
+            displayMenu();
+        }
+
+        function displayMenu() {
+            menuGrid.innerHTML = "";
+            statusMessage.textContent = "";
+
+            const filteredItems = menuItems.filter(item =>
+                item.isActive &&
+                (selectedCategory === "All" ||
+                    Number(item.categoryId) === Number(selectedCategory))
+            );
+
+            if (filteredItems.length === 0) {
+                statusMessage.textContent = "No menu items available.";
+                return;
+            }
+
+            filteredItems.forEach(item => {
+                const availableVariants = item.variants || [];
+
+                const card = document.createElement("article");
+                card.className = "menu-card";
+
+                const description = document.createElement("p");
+                description.textContent =
+                    item.description || item.categoryName || "";
+
+                const title = document.createElement("h3");
+                title.textContent = item.itemName;
+
+                const select = document.createElement("select");
+                select.className = "variant-select";
+
+                const price = document.createElement("div");
+                price.className = "price";
+
+                const unavailable = document.createElement("div");
+                unavailable.className = "unavailable";
+
+                const variants = availableVariants.filter(v => v.isAvailable);
+
+                if (variants.length > 0) {
+                    availableVariants.forEach(variant => {
+                        const option = document.createElement("option");
+
+                        option.value = variant.variantId;
+                        option.textContent =
+                            variant.variantName +
+                            (variant.isAvailable ? "" : " (Unavailable)");
+
+                        option.disabled = !variant.isAvailable;
+                        select.appendChild(option);
+                    });
+
+                    function updatePrice() {
+                        const selected = availableVariants.find(
+                            v => v.variantId == select.value
+                        );
+
+                        if (selected && selected.isAvailable) {
+                            price.textContent =
+                                "₱" + Number(selected.price).toFixed(2);
+
+                            unavailable.textContent = "";
+                        } else {
+                            price.textContent = "";
+                            unavailable.textContent =
+                                "Currently unavailable";
+                        }
+                    }
+
+                    select.addEventListener("change", updatePrice);
+                    updatePrice();
+
+                } else {
+                    select.style.display = "none";
+                    price.textContent = "Unavailable";
+                    unavailable.textContent = "No available variants";
+                }
+
+                card.appendChild(title);
+                card.appendChild(description);
+                card.appendChild(select);
+                card.appendChild(price);
+                card.appendChild(unavailable);
+
+                menuGrid.appendChild(card);
+            });
+        }
+
+        loadMenu();
+    </script>
+
+</body>
+</html>

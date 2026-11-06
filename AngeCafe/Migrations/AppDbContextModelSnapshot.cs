@@ -58,22 +58,44 @@ namespace AngeCafe.Api.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsAvailable")
-                        .HasColumnType("bit");
-
                     b.Property<string>("ItemName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Price")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("decimal(10,2)");
 
                     b.HasKey("MenuItemId");
 
                     b.HasIndex("CategoryId");
 
                     b.ToTable("MenuItems");
+                });
+
+            modelBuilder.Entity("AngeCafe.API.Models.MenuItemVariant", b =>
+                {
+                    b.Property<int>("VariantId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VariantId"));
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MenuItemId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<string>("VariantName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("VariantId");
+
+                    b.HasIndex("MenuItemId");
+
+                    b.ToTable("MenuItemVariants");
                 });
 
             modelBuilder.Entity("AngeCafe.API.Models.MenuItem", b =>
@@ -87,9 +109,25 @@ namespace AngeCafe.Api.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("AngeCafe.API.Models.MenuItemVariant", b =>
+                {
+                    b.HasOne("AngeCafe.API.Models.MenuItem", "MenuItem")
+                        .WithMany("Variants")
+                        .HasForeignKey("MenuItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MenuItem");
+                });
+
             modelBuilder.Entity("AngeCafe.API.Models.Category", b =>
                 {
                     b.Navigation("MenuItems");
+                });
+
+            modelBuilder.Entity("AngeCafe.API.Models.MenuItem", b =>
+                {
+                    b.Navigation("Variants");
                 });
 #pragma warning restore 612, 618
         }

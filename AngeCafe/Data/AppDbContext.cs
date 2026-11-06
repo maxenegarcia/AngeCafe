@@ -14,12 +14,23 @@ namespace AngeCafe.API.Data
 
         public DbSet<MenuItem> MenuItems { get; set; }
 
+        public DbSet<MenuItemVariant> MenuItemVariants { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<MenuItemVariant>()
+                .HasKey(v => v.VariantId);
+
             modelBuilder.Entity<MenuItem>()
-                .Property(m => m.Price)
+                .HasMany(m => m.Variants)
+                .WithOne(v => v.MenuItem)
+                .HasForeignKey(v => v.MenuItemId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<MenuItemVariant>()
+                .Property(v => v.Price)
                 .HasPrecision(10, 2);
         }
     }

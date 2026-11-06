@@ -16,13 +16,13 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+Console.WriteLine("CONTENT ROOT: " + app.Environment.ContentRootPath);
+Console.WriteLine("WEB ROOT: " + app.Environment.WebRootPath);
+Console.WriteLine("MENU EXISTS: " +
+    File.Exists(Path.Combine(app.Environment.WebRootPath!, "menu.html"))); app.UseHttpsRedirection();
 
-app.UseHttpsRedirection();
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 app.UseAuthorization();
 
