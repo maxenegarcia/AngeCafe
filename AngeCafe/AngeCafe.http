@@ -1,0 +1,6 @@
+@AngeCafe_HostAddress = http://localhost:5006
+
+GET {{AngeCafe_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
