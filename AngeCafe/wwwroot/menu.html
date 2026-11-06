@@ -1,4 +1,5 @@
 ﻿
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -199,6 +200,26 @@
             margin-top: 8px;
         }
 
+        /* ADD TO CART BUTTON */
+
+        .add-cart-btn {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            background: var(--deep-blue);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+            .add-cart-btn:hover {
+                background: var(--gold);
+                color: var(--deep-blue);
+            }
+
         /* STATUS */
 
         .status-message {
@@ -260,6 +281,7 @@
 <body>
 
     <!-- NAVIGATION -->
+
     <nav class="navbar">
         <div class="navbar-brand">ANGE CAFE</div>
 
@@ -267,10 +289,14 @@
             <a href="#home">HOME</a>
             <a href="#menu">MENU</a>
             <a href="#footer">ABOUT</a>
+            <a href="cart.html">
+                CART (<span id="cartCount">0</span>)
+            </a>
         </div>
     </nav>
 
     <!-- MENU CONTENT -->
+
     <main class="container" id="home">
 
         <section class="intro" id="menu">
@@ -283,6 +309,7 @@
         </section>
 
         <!-- MENU CATEGORIES -->
+
         <div class="categories" id="categories">
             <button class="category-btn active" onclick="showAll(this)">
                 All Items
@@ -290,22 +317,26 @@
         </div>
 
         <!-- LOADING STATUS -->
+
         <div id="status" class="status-message">
             Loading menu...
         </div>
 
         <!-- MENU ITEMS -->
+
         <section class="menu-grid" id="menuGrid"></section>
 
     </main>
 
     <!-- FOOTER -->
+
     <footer id="footer">
         <p><span>ANGE CAFE</span> | UST Angelicum College</p>
         <p>© 2026 Ange Cafe. All Rights Reserved.</p>
     </footer>
 
     <script>
+
         const menuGrid = document.getElementById("menuGrid");
         const categoriesContainer = document.getElementById("categories");
         const statusMessage = document.getElementById("status");
@@ -313,12 +344,68 @@
         let menuItems = [];
         let selectedCategory = "All";
 
+        // LOAD CART FROM BROWSER STORAGE
+
+        let cart = JSON.parse(
+            localStorage.getItem("angeCafeCart") || "[]"
+        );
+
+        // UPDATE CART COUNTER
+
+        function updateCartCount() {
+            const count = cart.reduce((total, item) =>
+                total + item.quantity, 0
+            );
+
+            document.getElementById("cartCount").textContent = count;
+        }
+
+        // ADD ITEM TO CART
+
+        function addToCart(item, variant) {
+
+            if (!variant || !variant.isAvailable) {
+                alert("This item is unavailable.");
+                return;
+            }
+
+            const existingItem = cart.find(cartItem =>
+                cartItem.variantId === variant.variantId
+            );
+
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({
+                    variantId: variant.variantId,
+                    itemName: item.itemName,
+                    variantName: variant.variantName,
+                    price: variant.price,
+                    quantity: 1
+                });
+            }
+
+            localStorage.setItem(
+                "angeCafeCart",
+                JSON.stringify(cart)
+            );
+
+            updateCartCount();
+
+            alert(item.itemName + " added to cart!");
+        }
+
+        // LOAD MENU FROM API
+
         async function loadMenu() {
+
             try {
-                const [categoryResponse, menuResponse] = await Promise.all([
-                    fetch("/api/Category"),
-                    fetch("/api/MenuItem")
-                ]);
+
+                const [categoryResponse, menuResponse] =
+                    await Promise.all([
+                        fetch("/api/Category"),
+                        fetch("/api/MenuItem")
+                    ]);
 
                 if (!categoryResponse.ok || !menuResponse.ok) {
                     throw new Error("Unable to retrieve menu data.");
@@ -328,24 +415,30 @@
                 menuItems = await menuResponse.json();
 
                 categoriesContainer.innerHTML = `
-                        <button class="category-btn active" onclick="showAll(this)">
+                        <button class="category-btn active"
+                            onclick="showAll(this)">
                             All Items
                         </button>
                     `;
 
                 categories.forEach(category => {
+
                     const button = document.createElement("button");
 
                     button.className = "category-btn";
                     button.textContent = category.categoryName;
 
                     button.onclick = () => {
+
                         selectedCategory = category.categoryId;
 
                         document.querySelectorAll(".category-btn")
-                            .forEach(btn => btn.classList.remove("active"));
+                            .forEach(btn =>
+                                btn.classList.remove("active")
+                            );
 
                         button.classList.add("active");
+
                         displayMenu();
                     };
 
@@ -355,24 +448,34 @@
                 displayMenu();
 
             } catch (error) {
+
                 statusMessage.textContent =
                     "Unable to load menu. Please check your API.";
+
                 console.error(error);
             }
         }
 
+        // SHOW ALL MENU ITEMS
+
         function showAll(button) {
+
             selectedCategory = "All";
 
             document.querySelectorAll(".category-btn")
-                .forEach(btn => btn.classList.remove("active"));
+                .forEach(btn =>
+                    btn.classList.remove("active")
+                );
 
             button.classList.add("active");
 
             displayMenu();
         }
 
+        // DISPLAY MENU ITEMS
+
         function displayMenu() {
+
             menuGrid.innerHTML = "";
             statusMessage.textContent = "";
 
@@ -388,12 +491,14 @@
             }
 
             filteredItems.forEach(item => {
+
                 const availableVariants = item.variants || [];
 
                 const card = document.createElement("article");
                 card.className = "menu-card";
 
                 const description = document.createElement("p");
+
                 description.textContent =
                     item.description || item.categoryName || "";
 
@@ -409,46 +514,65 @@
                 const unavailable = document.createElement("div");
                 unavailable.className = "unavailable";
 
-                const variants = availableVariants.filter(v => v.isAvailable);
+                const variants = availableVariants.filter(v =>
+                    v.isAvailable
+                );
 
                 if (variants.length > 0) {
+
                     availableVariants.forEach(variant => {
+
                         const option = document.createElement("option");
 
                         option.value = variant.variantId;
+
                         option.textContent =
                             variant.variantName +
                             (variant.isAvailable ? "" : " (Unavailable)");
 
                         option.disabled = !variant.isAvailable;
+
                         select.appendChild(option);
                     });
 
+                    select.value = variants[0].variantId;
+
                     function updatePrice() {
+
                         const selected = availableVariants.find(
                             v => v.variantId == select.value
                         );
 
                         if (selected && selected.isAvailable) {
+
                             price.textContent =
                                 "₱" + Number(selected.price).toFixed(2);
 
                             unavailable.textContent = "";
+
                         } else {
+
                             price.textContent = "";
+
                             unavailable.textContent =
                                 "Currently unavailable";
                         }
                     }
 
                     select.addEventListener("change", updatePrice);
+
                     updatePrice();
 
                 } else {
+
                     select.style.display = "none";
+
                     price.textContent = "Unavailable";
+
                     unavailable.textContent = "No available variants";
                 }
+
+                // ADD MENU CARD CONTENT
 
                 card.appendChild(title);
                 card.appendChild(description);
@@ -456,11 +580,37 @@
                 card.appendChild(price);
                 card.appendChild(unavailable);
 
+                // ADD TO CART BUTTON
+
+                if (variants.length > 0) {
+
+                    const addButton = document.createElement("button");
+
+                    addButton.className = "add-cart-btn";
+                    addButton.textContent = "Add to Cart";
+
+                    addButton.onclick = () => {
+
+                        const selectedVariant = availableVariants.find(
+                            v => v.variantId == select.value
+                        );
+
+                        addToCart(item, selectedVariant);
+                    };
+
+                    card.appendChild(addButton);
+                }
+
                 menuGrid.appendChild(card);
+
             });
         }
 
+        // INITIALIZE PAGE
+
+        updateCartCount();
         loadMenu();
+
     </script>
 
 </body>

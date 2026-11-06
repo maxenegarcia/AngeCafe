@@ -16,6 +16,12 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await dbContext.Database.MigrateAsync();
+}
+
 Console.WriteLine("CONTENT ROOT: " + app.Environment.ContentRootPath);
 Console.WriteLine("WEB ROOT: " + app.Environment.WebRootPath);
 Console.WriteLine("MENU EXISTS: " +
