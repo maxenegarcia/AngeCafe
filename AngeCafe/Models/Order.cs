@@ -6,6 +6,9 @@
 
         public string OrderNumber { get; set; } = string.Empty;
 
+        public string QueueNumber { get; set; } = string.Empty;
+
+
         public string CustomerName { get; set; } = string.Empty;
 
         public string ContactNumber { get; set; } = string.Empty;
