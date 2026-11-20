@@ -1,6 +1,13 @@
-@AngeCafe_HostAddress = http://localhost:5006
+@AngeCafe_HostAddress = https://localhost:7293
 
-GET {{AngeCafe_HostAddress}}/weatherforecast/
+### Get all categories
+GET {{AngeCafe_HostAddress}}/api/Category
 Accept: application/json
 
-###
+### Get all menu items
+GET {{AngeCafe_HostAddress}}/api/MenuItem
+Accept: application/json
+
+### Get order by queue number
+GET {{AngeCafe_HostAddress}}/api/Order/AC-20261120-0001
+Accept: application/json
