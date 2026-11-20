@@ -17,6 +17,8 @@ The project aims to:
 - Provide staff with an interface for managing and updating customer orders.
 - Allow administrators to manage menu information and monitor restaurant operations.
 - Record order payments through Cash and GCash.
+- Allow customers to track their orders using their queue numbers.
+- Allow customers to view their previous orders using their contact numbers.
 - Improve the efficiency and organization of restaurant operations.
 
 ## 3. System Features
@@ -31,6 +33,9 @@ The project aims to:
 - Provide customer name and contact number.
 - Select Cash or GCash as the payment method.
 - Receive order confirmation and queue number.
+- Track order details and current order status using a queue number.
+- View previous orders using their contact number.
+- View order details, purchased items, quantities, and total amounts.
 
 ### Administrator Features
 
@@ -90,9 +95,9 @@ The system has three user roles:
 |---|---|
 | Administrator | Manages menu categories, menu items, variants, and dashboard information. |
 | Waiter / Staff | Monitors customer orders and updates order and payment statuses. |
-| Customer | Browses the menu and places orders without logging in. |
+| Customer | Browses the menu, places orders, tracks orders, and views order history without logging in. |
 
-Customer ordering is available without customer account registration. Administrator and Waiter accounts use JWT authentication.
+Customer ordering and order tracking are available without customer account registration. Administrator and Waiter accounts use JWT authentication.
 
 ## 6. Team Members and Responsibilities
 
@@ -137,6 +142,8 @@ Responsibilities:
 - Implement checkout and order submission.
 - Support Cash and GCash payment methods.
 - Display order confirmation information.
+- Implement customer order tracking.
+- Implement customer order history.
 
 ## 7. Project Structure
 
@@ -174,6 +181,7 @@ AngeCafe
 │   ├── wwwroot
 │   │   ├── login.html
 │   │   ├── menu.html
+│   │   ├── track-order.html
 │   │   ├── admin-menu.html
 │   │   ├── admin-dashboard.html
 │   │   └── staff-orders.html
@@ -355,9 +363,12 @@ The actual URL may differ depending on the project's launch settings.
 | Swagger API Documentation | https://localhost:7293/swagger |
 | Login Page | https://localhost:7293/login.html |
 | Customer Menu | https://localhost:7293/menu.html |
+| Customer Order Tracking and History | https://localhost:7293/track-order.html |
 | Admin Menu Management | https://localhost:7293/admin-menu.html |
 | Admin Dashboard | https://localhost:7293/admin-dashboard.html |
 | Staff Order Management | https://localhost:7293/staff-orders.html |
+
+Customers can access the order tracking page through the **TRACK MY ORDER** navigation link on the customer menu.
 
 ## 11. Test Accounts
 
@@ -374,7 +385,7 @@ For the existing local development database, the original test accounts are:
 
 The existing accounts are not automatically updated when User Secrets passwords are changed. The seeder only creates an account when the username does not already exist.
 
-Customers do not need an account to place orders.
+Customers do not need an account to place orders, track orders, or view order history.
 
 **Note:** The listed existing local passwords are for academic development and testing only. Use stronger passwords for new accounts and never use these credentials in a production environment.
 
@@ -423,7 +434,52 @@ The application provides RESTful API endpoints for authentication, category mana
 
 Some endpoints require authentication and role authorization. Refer to Swagger for request formats, response details, and authorization requirements.
 
-## 13. Order and Payment Management
+## 13. Customer Order Tracking and History
+
+The system provides a dedicated customer page for tracking submitted orders and viewing previous transactions.
+
+### Customer Order Tracking
+
+Customers can track an order using the queue number received after successfully placing an order.
+
+The tracking page retrieves and displays:
+
+- Queue number.
+- Customer name.
+- Contact number.
+- Order date.
+- Order status.
+- Payment method.
+- Payment status.
+- Ordered items and variants.
+- Item quantities and prices.
+- Total order amount.
+
+### Customer Order History
+
+Customers can enter the contact number used when placing their orders to retrieve their previous transactions.
+
+The order history displays the available order records associated with the entered contact number, including order details, statuses, and total amounts.
+
+### How to Track an Order
+
+1. Open the customer menu.
+2. Click **TRACK MY ORDER**.
+3. Enter the queue number received after checkout.
+4. Click the tracking button.
+5. View the retrieved order information and current status.
+
+### How to View Order History
+
+1. Open the customer order tracking page.
+2. Find the Order History section.
+3. Enter the contact number used when placing the order.
+4. Click the order history button.
+5. View the previous orders associated with that contact number.
+
+The order tracking and history features use the customer-facing order API endpoints.
+
+## 14. Order and Payment Management
 
 ### Order Statuses
 
@@ -451,7 +507,7 @@ The system supports:
 | Paid | The payment has been received. |
 | Unpaid | The payment has not yet been received. |
 
-## 14. Authentication and Security
+## 15. Authentication and Security
 
 The system uses JSON Web Token (JWT) authentication for administrator and staff access.
 
@@ -466,7 +522,7 @@ Security features include:
 
 JWT signing keys and account passwords must not be committed to the public repository.
 
-## 15. Testing
+## 16. Testing
 
 The following functionalities should be tested:
 
@@ -494,6 +550,15 @@ The following functionalities should be tested:
 - Place an order.
 - Verify order confirmation and queue number.
 
+### Customer Order Tracking and History
+- Open the tracking page through the customer menu.
+- Retrieve an order using a valid queue number.
+- Verify that order details and current status are displayed.
+- Enter a contact number used for a previous order.
+- Verify that matching order history is displayed.
+- Verify that an invalid queue number is handled appropriately.
+- Verify that a contact number with no matching orders displays an appropriate message.
+
 ### Staff Order Management
 - View customer orders.
 - View order details.
@@ -506,7 +571,7 @@ The following functionalities should be tested:
 - Confirm that records are saved in the database.
 - Verify relationships between categories, menu items, variants, orders, and order items.
 
-## 16. Git and Branching Strategy
+## 17. Git and Branching Strategy
 
 The team follows a branch-based development workflow to separate each member's assigned responsibilities.
 
@@ -533,7 +598,7 @@ Each member works on their assigned branch and pushes changes to the GitHub repo
 
 This workflow helps prevent conflicts and keeps each member's contributions organized.
 
-## 17. Project Information
+## 18. Project Information
 
 **Project Title:** Restaurant Ordering and Menu Management System for Ange Cafe – UST Angelicum College
 
@@ -545,6 +610,6 @@ This workflow helps prevent conflicts and keeps each member's contributions orga
 
 **Repository:** https://github.com/maxenegarcia/AngeCafe.git
 
-## 18. License
+## 19. License
 
 This project was developed for academic purposes at UST Angelicum College. It is intended for educational use and demonstration.
