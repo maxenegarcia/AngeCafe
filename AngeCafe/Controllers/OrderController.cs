@@ -3,6 +3,7 @@ using AngeCafe.API.DTOs;
 using AngeCafe.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AngeCafe.Api.Controllers
 {
@@ -164,6 +165,80 @@ namespace AngeCafe.Api.Controllers
                 .ToListAsync();
 
             return Ok(orders.Select(MapOrderResponse));
+        }
+
+        // GET: api/Order/staff
+        // Only Waiters and Admins can view all customer orders.
+        [Authorize(Roles = "Waiter,Admin")]
+        [HttpGet("staff")]
+        public async Task<ActionResult<IEnumerable<OrderResponseDto>>> GetAllOrdersForStaff()
+        {
+            var orders = await _context.Orders
+                .AsNoTracking()
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.MenuItemVariant)
+                        .ThenInclude(v => v!.MenuItem)
+                .OrderByDescending(o => o.OrderDate)
+                .ToListAsync();
+
+            return Ok(orders.Select(MapOrderResponse));
+        }
+
+        // PUT: api/Order/staff/{id}/status
+        // Only Waiters and Admins can update order status.
+        [Authorize(Roles = "Waiter,Admin")]
+        [HttpPut("staff/{id}/status")]
+        public async Task<IActionResult> UpdateOrderStatus(
+            int id,
+            OrderStatusUpdateDto request)
+        {
+            if (string.IsNullOrWhiteSpace(request.Status))
+            {
+                return BadRequest("Order status is required.");
+            }
+
+            var order = await _context.Orders
+                .FirstOrDefaultAsync(o => o.OrderId == id);
+
+            if (order == null)
+            {
+                return NotFound("Order not found.");
+            }
+
+            string currentStatus = order.OrderStatus;
+            string newStatus = request.Status.Trim();
+
+            // Define the allowed status transitions.
+            bool isValidTransition =
+                (currentStatus == "Pending" &&
+                    (newStatus == "Preparing" || newStatus == "Cancelled"))
+                ||
+                (currentStatus == "Preparing" &&
+                    (newStatus == "Ready for Pickup" || newStatus == "Cancelled"))
+                ||
+                (currentStatus == "Ready for Pickup" &&
+                    newStatus == "Completed");
+
+            if (!isValidTransition)
+            {
+                return Conflict(new
+                {
+                    message = $"Cannot change order status from {currentStatus} to {newStatus}."
+                });
+            }
+
+            order.OrderStatus = newStatus;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = "Order status updated successfully.",
+                orderId = order.OrderId,
+                queueNumber = order.QueueNumber,
+                previousStatus = currentStatus,
+                newStatus = order.OrderStatus
+            });
         }
 
         private async Task<OrderResponseDto> GetOrderResponse(int orderId)
