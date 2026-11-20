@@ -443,7 +443,9 @@
 
             <nav class="navigation">
                 <a href="/menu.html">CUSTOMER MENU</a>
-                <a href="/admin-menu.html">MENU MANAGEMENT</a>
+                <a href="/admin-menu.html" id="menuManagementLink">MENU MANAGEMENT</a>
+                <a href="/admin-dashboard.html" id="dashboardLink">DASHBOARD</a>
+                <a href="#" onclick="logout()">LOGOUT</a>
             </nav>
 
         </div>
@@ -508,7 +510,7 @@
                     <option value="All">All Order Statuses</option>
                     <option value="Pending">Pending</option>
                     <option value="Preparing">Preparing</option>
-                    <option value="Ready">Ready</option>
+                    <option value="Ready for Pickup">Ready for Pickup</option>
                     <option value="Completed">Completed</option>
                     <option value="Cancelled">Cancelled</option>
                 </select>
@@ -538,24 +540,77 @@
 
         const API_URL = "/api/Order/staff";
 
+        const token = sessionStorage.getItem("angeCafeToken");
+        const role = sessionStorage.getItem("angeCafeRole");
+
         let orders = [];
 
         const orderList = document.getElementById("orderList");
         const message = document.getElementById("message");
 
+        // AUTHENTICATION
+
+        if (!token || !["Admin", "Waiter"].includes(role)) {
+            window.location.href = "/login.html";
+        }
+
+        if (role === "Waiter") {
+            document.getElementById("menuManagementLink").style.display = "none";
+            document.getElementById("dashboardLink").style.display = "none";
+        }
+
+        // LOGOUT
+
+        function logout() {
+            sessionStorage.removeItem("angeCafeToken");
+            sessionStorage.removeItem("angeCafeRole");
+            window.location.href = "/login.html";
+        }
+
+        // API REQUEST HELPER
+
+        async function apiFetch(url, options = {}) {
+            const headers = {
+                ...(options.headers || {}),
+                "Authorization": `Bearer ${token}`
+            };
+
+            return fetch(url, {
+                ...options,
+                headers
+            });
+        }
+
+        // ERROR HANDLER
+
+        async function getErrorMessage(response) {
+            const text = await response.text();
+
+            if (response.status === 401) {
+                logout();
+                return "Your session has expired. Please log in again.";
+            }
+
+            if (response.status === 403) {
+                return "You are not authorized to perform this action.";
+            }
+
+            return text || "An unexpected error occurred.";
+        }
+
         // LOAD ORDERS
 
         async function loadOrders() {
+            if (!token || !["Admin", "Waiter"].includes(role)) return;
 
             orderList.innerHTML =
                 '<p class="empty">Loading orders...</p>';
 
             try {
-
-                const response = await fetch(API_URL);
+                const response = await apiFetch(API_URL);
 
                 if (!response.ok) {
-                    throw new Error("Unable to load customer orders.");
+                    throw new Error(await getErrorMessage(response));
                 }
 
                 orders = await response.json();
@@ -564,7 +619,6 @@
                 displayOrders();
 
             } catch (error) {
-
                 orderList.innerHTML =
                     '<p class="empty">Unable to load orders.</p>';
 
@@ -576,7 +630,6 @@
         // UPDATE SUMMARY
 
         function updateSummary() {
-
             document.getElementById("totalOrders").textContent =
                 orders.length;
 
@@ -590,10 +643,26 @@
                 orders.filter(o => o.paymentStatus === "Unpaid").length;
         }
 
+        // AVAILABLE STATUS TRANSITIONS
+
+        function getAvailableStatuses(currentStatus) {
+            const transitions = {
+                "Pending": ["Preparing", "Cancelled"],
+                "Preparing": ["Ready for Pickup", "Cancelled"],
+                "Ready for Pickup": ["Completed"],
+                "Completed": [],
+                "Cancelled": []
+            };
+
+            return [
+                currentStatus,
+                ...(transitions[currentStatus] || [])
+            ];
+        }
+
         // DISPLAY ORDERS
 
         function displayOrders() {
-
             orderList.innerHTML = "";
 
             const searchText = document
@@ -604,7 +673,6 @@
                 document.getElementById("filterStatus").value;
 
             const filteredOrders = orders.filter(order => {
-
                 const matchesSearch =
                     String(order.customerName || "")
                         .toLowerCase().includes(searchText) ||
@@ -619,15 +687,12 @@
             });
 
             if (filteredOrders.length === 0) {
-
                 orderList.innerHTML =
                     '<p class="empty">No customer orders found.</p>';
-
                 return;
             }
 
             filteredOrders.forEach(order => {
-
                 const card = document.createElement("article");
                 card.className = "order-card";
 
@@ -694,7 +759,6 @@
                 itemsSection.appendChild(itemsTitle);
 
                 (order.items || []).forEach(item => {
-
                     const itemRow = document.createElement("div");
                     itemRow.className = "item-row";
 
@@ -715,8 +779,7 @@
                 const total = document.createElement("p");
                 total.className = "total";
                 total.textContent =
-                    "TOTAL: ₱" +
-                    Number(order.totalAmount).toFixed(2);
+                    "TOTAL: ₱" + Number(order.totalAmount).toFixed(2);
 
                 // ORDER STATUS CONTROL
 
@@ -731,21 +794,10 @@
 
                 const statusSelect = document.createElement("select");
 
-                [
-                    "Pending",
-                    "Preparing",
-                    "Ready",
-                    "Completed",
-                    "Cancelled"
-                ].forEach(status => {
-
+                getAvailableStatuses(order.orderStatus).forEach(status => {
                     const option = document.createElement("option");
                     option.value = status;
                     option.textContent = status;
-
-                    if (status === order.orderStatus) {
-                        option.selected = true;
-                    }
 
                     statusSelect.appendChild(option);
                 });
@@ -753,6 +805,9 @@
                 const statusButton = document.createElement("button");
                 statusButton.className = "primary-btn";
                 statusButton.textContent = "UPDATE";
+
+                statusButton.disabled =
+                    getAvailableStatuses(order.orderStatus).length <= 1;
 
                 statusButton.onclick = () =>
                     updateOrderStatus(order.orderId, statusSelect.value);
@@ -777,7 +832,6 @@
                 const paymentSelect = document.createElement("select");
 
                 ["Unpaid", "Paid"].forEach(status => {
-
                     const option = document.createElement("option");
                     option.value = status;
                     option.textContent = status;
@@ -818,22 +872,22 @@
         // UPDATE ORDER STATUS
 
         async function updateOrderStatus(orderId, newStatus) {
-
             try {
-
-                const response = await fetch(
+                const response = await apiFetch(
                     `${API_URL}/${orderId}/status`,
                     {
                         method: "PUT",
                         headers: {
                             "Content-Type": "application/json"
                         },
-                        body: JSON.stringify(newStatus)
+                        body: JSON.stringify({
+                            status: newStatus
+                        })
                     }
                 );
 
                 if (!response.ok) {
-                    throw new Error("Unable to update order status.");
+                    throw new Error(await getErrorMessage(response));
                 }
 
                 showMessage(
@@ -844,7 +898,6 @@
                 await loadOrders();
 
             } catch (error) {
-
                 showMessage(error.message, "error");
                 console.error(error);
             }
@@ -853,10 +906,8 @@
         // UPDATE PAYMENT STATUS
 
         async function updatePaymentStatus(orderId, newStatus) {
-
             try {
-
-                const response = await fetch(
+                const response = await apiFetch(
                     `${API_URL}/${orderId}/payment`,
                     {
                         method: "PUT",
@@ -868,7 +919,7 @@
                 );
 
                 if (!response.ok) {
-                    throw new Error("Unable to update payment status.");
+                    throw new Error(await getErrorMessage(response));
                 }
 
                 showMessage(
@@ -879,7 +930,6 @@
                 await loadOrders();
 
             } catch (error) {
-
                 showMessage(error.message, "error");
                 console.error(error);
             }
@@ -894,7 +944,9 @@
 
         // START PAGE
 
-        loadOrders();
+        if (token && ["Admin", "Waiter"].includes(role)) {
+            loadOrders();
+        }
 
     </script>
 
