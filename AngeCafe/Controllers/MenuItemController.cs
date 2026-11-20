@@ -2,6 +2,7 @@
 using AngeCafe.API.Models;
 using AngeCafe.API.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AngeCafe.API.Controllers
 {
@@ -42,6 +43,7 @@ namespace AngeCafe.API.Controllers
         }
 
         // POST: api/MenuItem
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<MenuItemResponseDto>>
             CreateMenuItem(MenuItemRequestDto request)
@@ -88,6 +90,7 @@ namespace AngeCafe.API.Controllers
         }
 
         // PUT: api/MenuItem/5
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateMenuItem(
             int id, MenuItemRequestDto request)
