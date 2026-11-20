@@ -72,7 +72,7 @@ namespace AngeCafe.API.Controllers
             {
                 CustomerName = request.CustomerName.Trim(),
                 ContactNumber = request.ContactNumber.Trim(),
-                OrderDate = DateTime.Now,
+                OrderDate = DateTime.UtcNow,
                 PaymentMethod = paymentMethod.Equals(
                     "Cash", StringComparison.OrdinalIgnoreCase)
                     ? "Cash" : "GCash",
@@ -297,14 +297,31 @@ namespace AngeCafe.API.Controllers
         [HttpGet("staff/daily-sales")]
         public async Task<IActionResult> GetDailySales()
         {
-            DateTime today = DateTime.Today;
-            DateTime tomorrow = today.AddDays(1);
+            TimeZoneInfo philippinesTimeZone = TimeZoneInfo.FindSystemTimeZoneById(
+                OperatingSystem.IsWindows()
+                    ? "Singapore Standard Time"
+                    : "Asia/Manila");
+
+            DateTime philippinesNow = TimeZoneInfo.ConvertTimeFromUtc(
+                DateTime.UtcNow,
+                philippinesTimeZone);
+
+            DateTime localStart = philippinesNow.Date;
+            DateTime localEnd = localStart.AddDays(1);
+
+            DateTime utcStart = TimeZoneInfo.ConvertTimeToUtc(
+                DateTime.SpecifyKind(localStart, DateTimeKind.Unspecified),
+                philippinesTimeZone);
+
+            DateTime utcEnd = TimeZoneInfo.ConvertTimeToUtc(
+                DateTime.SpecifyKind(localEnd, DateTimeKind.Unspecified),
+                philippinesTimeZone);
 
             var todaysOrders = _context.Orders
                 .AsNoTracking()
                 .Where(o =>
-                    o.OrderDate >= today &&
-                    o.OrderDate < tomorrow);
+                    o.OrderDate >= utcStart &&
+                    o.OrderDate < utcEnd);
 
             var salesOrders = todaysOrders
                 .Where(o =>
@@ -326,7 +343,7 @@ namespace AngeCafe.API.Controllers
 
             return Ok(new
             {
-                reportDate = today.ToString("yyyy-MM-dd"),
+                reportDate = localStart.ToString("yyyy-MM-dd"),
                 totalOrders,
                 completedOrders,
                 totalSales = cashSales + gcashSales,
