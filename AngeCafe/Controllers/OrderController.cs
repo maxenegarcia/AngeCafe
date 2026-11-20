@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace AngeCafe.Api.Controllers
+namespace AngeCafe.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
