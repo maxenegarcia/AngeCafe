@@ -1,0 +1,354 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ange Cafe | Admin Dashboard</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #F5F8FC;
+            color: #222;
+        }
+
+        header {
+            background: #111;
+            color: white;
+            padding: 20px 6%;
+            border-bottom: 4px solid #D4AF37;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .brand {
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #D4AF37;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+            .header-right span {
+                font-size: 14px;
+            }
+
+        button, a {
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .logout {
+            background: #D4AF37;
+            color: #111;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 25px;
+        }
+
+        .welcome {
+            margin-bottom: 30px;
+        }
+
+            .welcome h1 {
+                color: #091957;
+                margin-bottom: 8px;
+            }
+
+            .welcome p {
+                color: #666;
+            }
+
+        .date {
+            margin-top: 12px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .section-title {
+            margin-bottom: 18px;
+            color: #091957;
+        }
+
+        .sales-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .sales-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #e5eaf0;
+            border-top: 4px solid #D4AF37;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        }
+
+            .sales-card p {
+                color: #666;
+                font-size: 14px;
+                margin-bottom: 15px;
+            }
+
+            .sales-card h2 {
+                color: #091957;
+                font-size: 28px;
+            }
+
+        .actions {
+            margin-top: 40px;
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .action-link {
+            display: block;
+            background: #091957;
+            color: white;
+            text-align: center;
+            padding: 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+            .action-link:hover {
+                background: #142b70;
+            }
+
+        .refresh {
+            margin-top: 25px;
+            background: #D4AF37;
+            color: #111;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        #message {
+            margin-top: 20px;
+            color: #b42318;
+            font-size: 14px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #777;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 18px 5%;
+            }
+
+            .brand {
+                font-size: 20px;
+            }
+
+            main {
+                margin-top: 25px;
+                padding: 0 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="brand">ANGE CAFE</div>
+
+        <div class="header-right">
+            <span>Administrator</span>
+            <button class="logout" onclick="logout()">Logout</button>
+        </div>
+    </header>
+
+    <main>
+
+        <section class="welcome">
+            <h1>Admin Dashboard</h1>
+            <p>Welcome! Here's your restaurant's sales overview.</p>
+            <div class="date" id="reportDate">Loading date...</div>
+        </section>
+
+        <h3 class="section-title">Today's Sales Overview</h3>
+
+        <section class="sales-grid">
+
+            <div class="sales-card">
+                <p>Total Sales</p>
+                <h2 id="totalSales">₱0.00</h2>
+            </div>
+
+            <div class="sales-card">
+                <p>Cash Sales</p>
+                <h2 id="cashSales">₱0.00</h2>
+            </div>
+
+            <div class="sales-card">
+                <p>GCash Sales</p>
+                <h2 id="gcashSales">₱0.00</h2>
+            </div>
+
+            <div class="sales-card">
+                <p>Total Orders</p>
+                <h2 id="totalOrders">0</h2>
+            </div>
+
+            <div class="sales-card">
+                <p>Completed Orders</p>
+                <h2 id="completedOrders">0</h2>
+            </div>
+
+        </section>
+
+        <section class="actions">
+            <h3 class="section-title">Management</h3>
+
+            <div class="action-grid">
+                <a href="/admin-menu.html" class="action-link">
+                    Manage Menu
+                </a>
+
+                <a href="/staff-orders.html" class="action-link">
+                    View Staff Orders
+                </a>
+            </div>
+
+            <button class="refresh" onclick="loadDailySales()">
+                Refresh Sales
+            </button>
+
+            <p id="message"></p>
+        </section>
+
+    </main>
+
+    <footer>
+        Ange Cafe | Restaurant Ordering and Menu Management System
+    </footer>
+
+    <script>const token = sessionStorage.getItem("angeCafeToken");
+    const role = sessionStorage.getItem("angeCafeRole");
+
+    // Check login and administrator role
+    if (!token || role !== "Admin") {
+        window.location.href = "/login.html";
+    }
+
+    function formatCurrency(amount) {
+        return new Intl.NumberFormat("en-PH", {
+            style: "currency",
+            currency: "PHP"
+        }).format(amount || 0);
+    }
+
+    function formatDate(dateString) {
+        const date = new Date(dateString + "T00:00:00");
+
+        return date.toLocaleDateString("en-PH", {
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+        });
+    }
+
+    async function loadDailySales() {
+        const message = document.getElementById("message");
+
+        message.textContent = "Loading sales report...";
+
+        try {
+            const response = await fetch(
+                "/api/Order/staff/daily-sales",
+                {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                }
+            );
+
+            if (response.status === 401 || response.status === 403) {
+                message.textContent =
+                    "Your session is invalid or you do not have administrator access.";
+                return;
+            }
+
+            if (!response.ok) {
+                throw new Error("Unable to retrieve daily sales.");
+            }
+
+            const data = await response.json();
+
+            document.getElementById("totalSales").textContent =
+                formatCurrency(data.totalSales);
+
+            document.getElementById("cashSales").textContent =
+                formatCurrency(data.cashSales);
+
+            document.getElementById("gcashSales").textContent =
+                formatCurrency(data.gcashSales);
+
+            document.getElementById("totalOrders").textContent =
+                data.totalOrders;
+
+            document.getElementById("completedOrders").textContent =
+                data.completedOrders;
+
+            document.getElementById("reportDate").textContent =
+                "Report Date: " + formatDate(data.reportDate);
+
+            message.textContent = "";
+
+        } catch (error) {
+            console.error(error);
+            message.textContent =
+                "Failed to load sales report. Please try again.";
+        }
+    }
+
+    function logout() {
+        sessionStorage.removeItem("angeCafeToken");
+        sessionStorage.removeItem("angeCafeRole");
+
+        window.location.href = "/login.html";
+    }
+
+    if (token && role === "Admin") {
+        loadDailySales();
+    }</script>
+
+</body>
+</html>

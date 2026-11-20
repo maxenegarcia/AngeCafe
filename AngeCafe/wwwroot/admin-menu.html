@@ -62,6 +62,13 @@
                 margin-top: 4px;
             }
 
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
         .navbar a {
             color: white;
             text-decoration: none;
@@ -307,6 +314,16 @@
                 background: #DDDDDD;
             }
 
+        .logout-btn {
+            background: var(--gold);
+            color: var(--black);
+        }
+
+            .logout-btn:hover {
+                background: var(--gold-dark);
+                color: white;
+            }
+
         /* MENU LIST */
 
         .menu-list {
@@ -424,6 +441,10 @@
                 text-align: center;
             }
 
+            .nav-links {
+                justify-content: center;
+            }
+
             .form-grid {
                 grid-template-columns: 1fr;
             }
@@ -470,7 +491,13 @@
             <small>UST ANGELICUM</small>
         </div>
 
-        <a href="/menu.html">VIEW CUSTOMER MENU</a>
+        <div class="nav-links">
+            <a href="/admin-dashboard.html">DASHBOARD</a>
+            <a href="/menu.html">VIEW CUSTOMER MENU</a>
+            <button type="button" class="logout-btn" onclick="logout()">
+                LOGOUT
+            </button>
+        </div>
 
     </nav>
 
@@ -603,6 +630,27 @@
 
     <script>
 
+        // ==========================================
+        // AUTHENTICATION
+        // ==========================================
+
+        const token = sessionStorage.getItem("angeCafeToken");
+        const role = sessionStorage.getItem("angeCafeRole");
+
+        if (!token || role !== "Admin") {
+            window.location.replace("/login.html");
+        }
+
+        function logout() {
+            sessionStorage.removeItem("angeCafeToken");
+            sessionStorage.removeItem("angeCafeRole");
+            window.location.href = "/login.html";
+        }
+
+        // ==========================================
+        // API CONFIGURATION
+        // ==========================================
+
         const API_URL = "/api/MenuItem";
         const CATEGORY_URL = "/api/Category";
 
@@ -618,7 +666,33 @@
         const menuList = document.getElementById("menuList");
         const message = document.getElementById("message");
 
+        // Automatically attach JWT token to API requests
+
+        async function apiFetch(url, options = {}) {
+
+            const headers = {
+                ...(options.headers || {}),
+                "Authorization": `Bearer ${token}`
+            };
+
+            const response = await fetch(url, {
+                ...options,
+                headers
+            });
+
+            if (response.status === 401 || response.status === 403) {
+                showMessage(
+                    "Your session is invalid or you do not have permission.",
+                    "error"
+                );
+            }
+
+            return response;
+        }
+
+        // ==========================================
         // LOAD CATEGORIES AND MENU ITEMS
+        // ==========================================
 
         async function initializePage() {
 
@@ -626,8 +700,8 @@
 
                 const [categoryResponse, menuResponse] =
                     await Promise.all([
-                        fetch(CATEGORY_URL),
-                        fetch(API_URL)
+                        apiFetch(CATEGORY_URL),
+                        apiFetch(API_URL)
                     ]);
 
                 if (!categoryResponse.ok || !menuResponse.ok) {
@@ -653,7 +727,9 @@
             }
         }
 
+        // ==========================================
         // POPULATE CATEGORY DROPDOWNS
+        // ==========================================
 
         function populateCategories() {
 
@@ -687,7 +763,9 @@
             });
         }
 
+        // ==========================================
         // ADD VARIANT INPUT ROW
+        // ==========================================
 
         function addVariantRow(name = "", price = "", available = true) {
 
@@ -742,7 +820,9 @@
             variantContainer.appendChild(row);
         }
 
+        // ==========================================
         // GET VARIANTS FROM FORM
+        // ==========================================
 
         function getVariantsFromForm() {
 
@@ -763,7 +843,9 @@
             }));
         }
 
+        // ==========================================
         // SAVE NEW OR UPDATED MENU ITEM
+        // ==========================================
 
         form.addEventListener("submit", async function (event) {
 
@@ -839,7 +921,7 @@
 
                 const method = editingId ? "PUT" : "POST";
 
-                const response = await fetch(url, {
+                const response = await apiFetch(url, {
 
                     method: method,
 
@@ -879,15 +961,20 @@
             } finally {
 
                 saveBtn.disabled = false;
-                saveBtn.textContent = "SAVE MENU ITEM";
+
+                saveBtn.textContent = editingId
+                    ? "UPDATE MENU ITEM"
+                    : "SAVE MENU ITEM";
             }
         });
 
+        // ==========================================
         // REFRESH MENU ITEMS
+        // ==========================================
 
         async function refreshMenu() {
 
-            const response = await fetch(API_URL);
+            const response = await apiFetch(API_URL);
 
             if (!response.ok) {
                 throw new Error("Unable to refresh menu items.");
@@ -898,7 +985,9 @@
             displayItems();
         }
 
+        // ==========================================
         // DISPLAY MENU ITEMS
+        // ==========================================
 
         function displayItems() {
 
@@ -1016,7 +1105,9 @@
             });
         }
 
+        // ==========================================
         // EDIT MENU ITEM
+        // ==========================================
 
         function editItem(id) {
 
@@ -1069,7 +1160,9 @@
             });
         }
 
+        // ==========================================
         // DEACTIVATE MENU ITEM
+        // ==========================================
 
         async function deactivateItem(id) {
 
@@ -1081,7 +1174,7 @@
 
             try {
 
-                const response = await fetch(`${API_URL}/${id}`, {
+                const response = await apiFetch(`${API_URL}/${id}`, {
                     method: "DELETE"
                 });
 
@@ -1099,10 +1192,13 @@
             } catch (error) {
 
                 showMessage(error.message, "error");
+                console.error(error);
             }
         }
 
+        // ==========================================
         // RESET FORM
+        // ==========================================
 
         function resetForm() {
 
@@ -1121,7 +1217,9 @@
             addVariantRow();
         }
 
+        // ==========================================
         // SHOW MESSAGE
+        // ==========================================
 
         function showMessage(text, type) {
 
@@ -1134,9 +1232,13 @@
             });
         }
 
+        // ==========================================
         // START PAGE
+        // ==========================================
 
-        initializePage();
+        if (token && role === "Admin") {
+            initializePage();
+        }
 
     </script>
 
