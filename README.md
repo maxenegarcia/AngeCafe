@@ -1,74 +1,75 @@
 # ANGE CAFE
 ## Restaurant Ordering and Menu Management System
-**UST Angelicum College**
+### UST Angelicum College
 
----
+## 1. Project Overview
 
-## Project Overview
+Ange Cafe is a web-based Restaurant Ordering and Menu Management System developed for UST Angelicum College. The system is designed to simplify restaurant operations by providing an organized platform for managing menu items, processing customer orders, monitoring order statuses, and recording payments.
 
-Ange Cafe is a web-based Restaurant Ordering and Menu Management System developed for UST Angelicum College. The system aims to simplify restaurant operations by providing an organized platform for customer ordering, menu management, order processing, and payment monitoring.
+The system provides separate interfaces and functionalities for customers, administrators, and staff members.
 
-Customers can browse available menu items, select variants, place orders, and track their order status. Administrators can manage menu categories and menu items, while staff members can process customer orders and update order and payment statuses.
+## 2. Project Objectives
 
-## Project Objectives
+The project aims to:
 
-- Provide customers with an accessible online menu and ordering system.
-- Simplify restaurant order processing and management.
-- Allow administrators to manage menu categories, items, variants, and prices.
-- Provide staff with tools to monitor and update customer orders.
-- Track payment statuses and daily sales.
-- Store restaurant transactions and information in a centralized database.
+- Develop a centralized system for managing restaurant menu items and categories.
+- Allow customers to browse the available menu and place orders online.
+- Provide staff with an interface for managing and updating customer orders.
+- Allow administrators to manage menu information and monitor restaurant operations.
+- Record order payments through Cash and GCash.
+- Improve the efficiency and organization of restaurant operations.
 
-## System Features
+## 3. System Features
 
 ### Customer Features
-- Browse available menu items and categories.
-- View menu item variants and prices.
-- Add items to the shopping cart.
-- Update item quantities and manage cart contents.
-- Place customer orders.
-- Enter customer name and contact number.
-- Select Cash or GCash as the payment method.
-- Receive an automatically generated queue number.
-- Track order status.
-- View order history using a contact number.
 
-### Admin Features
+- View available menu items.
+- Browse menu items by category.
+- View menu item descriptions, prices, and available variants.
+- Select item variants and quantities.
+- Place orders without creating an account.
+- Provide customer name and contact number.
+- Select Cash or GCash as the payment method.
+- Receive order confirmation and queue number.
+
+### Administrator Features
+
 - Secure administrator login.
 - Manage menu categories.
-- Add new menu items.
-- Edit existing menu items.
-- Activate and deactivate menu items.
-- Manage item variants, prices, and availability.
-- Access the admin dashboard.
-- View total orders and completed orders.
-- Monitor daily sales.
-- View Cash and GCash sales.
-- Access staff order management.
+- Add, view, update, and delete categories.
+- Manage menu items.
+- Add, view, update, and delete menu items.
+- Manage menu item variants and prices.
+- Enable or disable menu item availability.
+- Access the administrator dashboard.
+- Monitor total sales, Cash sales, GCash sales, total orders, and completed orders.
 
 ### Staff Features
+
 - Secure staff login.
 - View customer orders.
-- Search orders by customer name or queue number.
-- Filter orders by order status.
-- View customer and order information.
+- Monitor order details.
 - Update order statuses.
 - Update payment statuses.
 - Monitor pending and completed orders.
-- Log out securely.
+- View daily sales information.
 
-## Technologies Used
-
-### Frontend
-- HTML
-- CSS
-- JavaScript
+## 4. Technologies Used
 
 ### Backend
 - C#
 - ASP.NET Core Web API
+- .NET 8
 - Entity Framework Core
-- JSON Web Token (JWT) Authentication
+- Repository Pattern
+- Service Pattern
+- JWT Authentication
+- ASP.NET Core Identity PasswordHasher
+
+### Frontend
+- HTML5
+- CSS3
+- JavaScript
 
 ### Database
 - Microsoft SQL Server
@@ -77,91 +78,154 @@ Customers can browse available menu items, select variants, place orders, and tr
 ### Development Tools
 - Visual Studio
 - SQL Server Management Studio
+- Swagger / OpenAPI
 - Git
 - GitHub
-- Swagger / OpenAPI
 
-## System User Roles
+## 5. User Roles
 
-| Role | Description |
+The system has three user roles:
+
+| Role | Responsibilities |
 |---|---|
-| Admin | Manages menu information, categories, sales reports, and system operations. |
-| Waiter | Views customer orders and manages order and payment statuses. |
-| Customer | Browses the menu, places orders, and tracks order information without requiring an account. |
+| Administrator | Manages menu categories, menu items, variants, and dashboard information. |
+| Waiter / Staff | Monitors customer orders and updates order and payment statuses. |
+| Customer | Browses the menu and places orders without logging in. |
 
-## Team Members and Branch Assignments
+Customer ordering is available without customer account registration. Administrator and Waiter accounts use JWT authentication.
 
-The project is developed by three Bachelor of Science in Information Technology students. Each member is assigned a specific system component and works on a separate Git branch.
+## 6. Team Members and Responsibilities
 
-| Team Member | Assigned Branch | Responsibilities |
-|---|---|---|
-| Maxene Garcia | Menu and Database Management | Project foundation, database configuration, menu categories, menu items, and menu management. |
-| Althea Onez | Staff Order Management | Staff order viewing, order processing, order status updates, and payment status management. |
-| Nichole Pebris | Customer Ordering and Checkout | Customer ordering, shopping cart, checkout process, payment method selection, and order submission. |
+The project is developed by three second-year BS Information Technology students.
 
-### Branching Strategy
+| Team Member | Assigned Responsibility |
+|---|---|
+| Maxene Garcia | Project Foundation, Database, and Menu Management |
+| Althea Onez | Staff Order Management |
+| Nichole Pebris | Customer Ordering and Checkout |
 
-The project follows a branch-based development workflow. Each team member works independently on their assigned branch to develop and test their respective features.
+### Member 1: Project Foundation, Database, and Menu Management
 
-The team follows these steps:
+Responsibilities:
+- Set up the ASP.NET Core Web API project.
+- Configure the database connection.
+- Implement Entity Framework Core and AppDbContext.
+- Create database models and migrations.
+- Configure repository and service patterns.
+- Develop category management.
+- Develop menu item management.
+- Implement customer menu display.
+- Configure shared application services and dependencies.
 
-1. Each member works on their assigned Git branch.
-2. Changes are committed locally.
-3. Completed changes are pushed to the GitHub repository.
-4. A Pull Request is created for review.
-5. Team members review and test the submitted changes.
-6. Approved changes are merged into the main branch.
+### Member 2: Staff Order Management
 
-This workflow helps organize development tasks, minimize conflicts, and maintain collaboration among team members.
+Responsibilities:
+- Develop the staff order management interface.
+- Display customer orders.
+- View order details.
+- Update order statuses.
+- Update payment statuses.
+- Monitor daily sales and order information.
 
-## Test Accounts
+### Member 3: Customer Ordering and Checkout
 
-The following development accounts are provided for local testing:
+Responsibilities:
+- Develop the customer ordering interface.
+- Display available menu items.
+- Allow customers to select menu item variants and quantities.
+- Collect customer information.
+- Implement checkout and order submission.
+- Support Cash and GCash payment methods.
+- Display order confirmation information.
 
-| Role | Username | Password |
-|---|---|---|
-| Admin | admin | 123 |
-| Waiter | staff | 123 |
-| Customer | No login required | No password required |
+## 7. Project Structure
 
-**Note:** Customers do not need to log in. They provide their name and contact number during checkout.
+The project follows a layered organization to separate application responsibilities.
 
-These credentials are intended for academic testing only and should not be used in a production environment.
+```text
+AngeCafe
+│
+├── AngeCafe
+│   ├── Controllers
+│   │   ├── AuthController.cs
+│   │   ├── CategoryController.cs
+│   │   ├── MenuItemController.cs
+│   │   └── OrderController.cs
+│   │
+│   ├── Data
+│   │   ├── AppDbContext.cs
+│   │   ├── UserSeeder.cs
+│   │   └── MenuSeeder.cs
+│   │
+│   ├── DTOs
+│   │
+│   ├── Models
+│   │
+│   ├── Repositories
+│   │   ├── Interfaces
+│   │   └── Implementations
+│   │
+│   ├── Services
+│   │   ├── Interfaces
+│   │   └── Implementations
+│   │
+│   ├── Migrations
+│   │
+│   ├── wwwroot
+│   │   ├── login.html
+│   │   ├── menu.html
+│   │   ├── admin-menu.html
+│   │   ├── admin-dashboard.html
+│   │   └── staff-orders.html
+│   │
+│   ├── Program.cs
+│   ├── appsettings.json
+│   └── AngeCafe.Api.csproj
+│
+└── README.md
+```
 
-## Database Information
+## 8. Database Configuration
 
-**Database Name:** AngeCafeDB
+The system uses Microsoft SQL Server LocalDB.
 
-**Database Server:** SQL Server LocalDB
+### Database Name
+
+`AngeCafeDB`
 
 ### Connection String
+
+The default local development connection string is:
 
 ```text
 Server=(localdb)\MSSQLLocalDB;Database=AngeCafeDB;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True
 ```
 
-### Main Database Tables
+### Database Tables
 
-| Table Name | Description |
+The database includes the following main tables:
+
+| Table | Description |
 |---|---|
-| Users | Stores administrator and staff account information. |
 | Categories | Stores menu categories. |
-| MenuItems | Stores restaurant menu item information. |
-| MenuItemVariants | Stores menu item variants, prices, and availability. |
+| MenuItems | Stores menu item information. |
+| MenuItemVariants | Stores menu item variants and their prices. |
+| Users | Stores administrator and staff account information. |
 | Orders | Stores customer order information. |
-| OrderItems | Stores the individual items included in each order. |
+| OrderItems | Stores the menu items included in each order. |
 
-## Installation and Setup
+Entity Framework Core Code First Migrations are used to create and update the database structure.
+
+## 9. Installation and Setup
 
 ### Prerequisites
 
-Before running the project, make sure the following are installed:
+Before running the project, install the following:
 
-- Visual Studio
-- .NET 8 SDK
-- SQL Server LocalDB
-- Git
-- Entity Framework Core tools
+- Visual Studio 2022 or later.
+- .NET 8 SDK.
+- SQL Server LocalDB.
+- Git.
 
 ### Step 1: Clone the Repository
 
@@ -175,164 +239,312 @@ git clone https://github.com/maxenegarcia/AngeCafe.git
 
 Open the cloned repository in Visual Studio.
 
-Locate the ASP.NET Core API project and open the solution or project file.
+Navigate to the folder containing:
 
-### Step 3: Configure the Database
+`AngeCafe.Api.csproj`
 
-Make sure SQL Server LocalDB is installed and running.
+Open the project in Visual Studio or use the terminal.
 
-Configure the database connection string in the application's configuration file.
+### Step 3: Restore Dependencies
 
-```text
-Server=(localdb)\MSSQLLocalDB;Database=AngeCafeDB;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True
-```
-
-### Step 4: Install Dependencies
-
-Open a terminal in the directory containing the project file and execute:
+Run:
 
 ```bash
 dotnet restore
 ```
 
-### Step 5: Apply Database Migrations
+### Step 4: Configure User Secrets
 
-Execute the following command to create or update the database:
+The project uses .NET User Secrets to store sensitive information outside the repository.
 
-```bash
+Open a terminal in the project folder containing `AngeCafe.Api.csproj`.
+
+Initialize User Secrets:
+
+```powershell
+dotnet user-secrets init
+```
+
+If the project already has a UserSecretsId, this command can be skipped.
+
+Configure the administrator account:
+
+```powershell
+dotnet user-secrets set "SeedUsers:AdminUsername" "admin"
+dotnet user-secrets set "SeedUsers:AdminPassword" "YOUR_ADMIN_PASSWORD"
+```
+
+Configure the waiter account:
+
+```powershell
+dotnet user-secrets set "SeedUsers:WaiterUsername" "staff"
+dotnet user-secrets set "SeedUsers:WaiterPassword" "YOUR_WAITER_PASSWORD"
+```
+
+Replace the password placeholders with your chosen local development passwords.
+
+### Step 5: Configure the JWT Signing Key
+
+Generate a secure random JWT signing key using PowerShell:
+
+```powershell
+$bytes = New-Object byte[] 64
+$rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+$rng.GetBytes($bytes)
+$rng.Dispose()
+$key = [Convert]::ToBase64String($bytes)
+dotnet user-secrets set "Jwt:Key" "$key"
+```
+
+The generated key is stored in User Secrets and is not included in the repository.
+
+### Step 6: Verify User Secrets
+
+Run:
+
+```powershell
+dotnet user-secrets list
+```
+
+Verify that the following settings are configured:
+
+- SeedUsers:AdminUsername
+- SeedUsers:AdminPassword
+- SeedUsers:WaiterUsername
+- SeedUsers:WaiterPassword
+- Jwt:Key
+
+Do not share or commit the actual secret values.
+
+### Step 7: Apply Database Migrations
+
+Run:
+
+```powershell
 dotnet ef database update
 ```
 
-### Step 6: Run the Application
+If the Entity Framework Core CLI is not installed, install it using:
 
-Run the project through Visual Studio or execute:
+```powershell
+dotnet tool install --global dotnet-ef --version 8.0.0
+```
 
-```bash
+Then execute the database update command again.
+
+### Step 8: Run the Application
+
+Execute:
+
+```powershell
 dotnet run
 ```
 
-### Step 7: Open the Application
+Wait until the application starts successfully.
 
-Use the HTTPS address displayed in Visual Studio or the terminal.
+## 10. Accessing the System
 
-The local development address may be:
+The default development URL is:
 
-```text
-https://localhost:7293
-```
+`https://localhost:7293`
 
-### Available Pages
+The actual URL may differ depending on the project's launch settings.
 
 | Page | URL |
 |---|---|
+| Swagger API Documentation | https://localhost:7293/swagger |
+| Login Page | https://localhost:7293/login.html |
 | Customer Menu | https://localhost:7293/menu.html |
-| Admin Login | https://localhost:7293/login.html |
-| Menu Management | https://localhost:7293/admin-menu.html |
+| Admin Menu Management | https://localhost:7293/admin-menu.html |
 | Admin Dashboard | https://localhost:7293/admin-dashboard.html |
 | Staff Order Management | https://localhost:7293/staff-orders.html |
-| Swagger API Documentation | https://localhost:7293/swagger |
 
-**Note:** The HTTPS port may vary depending on the project's launch settings.
+## 11. Test Accounts
 
-## API Documentation
+The administrator and waiter accounts are created through the UserSeeder using credentials configured in User Secrets.
 
-The system uses ASP.NET Core Web API to handle communication between the frontend and backend.
+For a fresh database, the usernames and passwords are determined by the values configured during the User Secrets setup.
 
-Swagger is integrated to provide interactive API documentation and allow developers to test available endpoints.
+For the existing local development database, the original test accounts are:
 
-**Swagger URL:**
+| Role | Username | Existing Local Password |
+|---|---|---|
+| Administrator | admin | 123 |
+| Waiter / Staff | staff | 123 |
 
-```text
-https://localhost:7293/swagger
-```
+The existing accounts are not automatically updated when User Secrets passwords are changed. The seeder only creates an account when the username does not already exist.
 
-### Main API Endpoints
+Customers do not need an account to place orders.
+
+**Note:** The listed existing local passwords are for academic development and testing only. Use stronger passwords for new accounts and never use these credentials in a production environment.
+
+## 12. API Endpoints
+
+The application provides RESTful API endpoints for authentication, category management, menu management, and order processing.
+
+### Authentication
 
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | /api/Category | Retrieve menu categories. |
-| POST | /api/Category | Create a category. |
-| PUT | /api/Category/{id} | Update a category. |
-| DELETE | /api/Category/{id} | Delete a category. |
-| GET | /api/MenuItem | Retrieve menu items. |
-| POST | /api/MenuItem | Create a menu item. |
-| PUT | /api/MenuItem/{id} | Update a menu item. |
-| DELETE | /api/MenuItem/{id} | Delete a menu item. |
-| POST | /api/Auth/login | Authenticate a user. |
-| POST | /api/Order | Submit a customer order. |
-| GET | /api/Order/{queueNumber} | Track an order. |
-| GET | /api/Order/history | Retrieve customer order history. |
-| GET | /api/Order/staff | Retrieve all customer orders for staff. |
-| PUT | /api/Order/staff/{id}/status | Update order status. |
-| PUT | /api/Order/staff/{orderId}/payment | Update payment status. |
-| GET | /api/Order/staff/daily-sales | Retrieve the daily sales report. |
+| POST | `/api/Auth/login` | Authenticates an administrator or waiter. |
 
-Some endpoints require JWT authentication and specific user roles.
+### Categories
 
-## Order Statuses
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/Category` | Retrieves all categories. |
+| GET | `/api/Category/{id}` | Retrieves a category by ID. |
+| POST | `/api/Category` | Creates a category. |
+| PUT | `/api/Category/{id}` | Updates a category. |
+| DELETE | `/api/Category/{id}` | Deletes a category. |
 
-Customer orders follow these statuses:
+### Menu Items
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/MenuItem` | Retrieves menu items. |
+| GET | `/api/MenuItem/{id}` | Retrieves a menu item by ID. |
+| POST | `/api/MenuItem` | Creates a menu item. |
+| PUT | `/api/MenuItem/{id}` | Updates a menu item. |
+| DELETE | `/api/MenuItem/{id}` | Deletes a menu item. |
+
+### Orders
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/Order` | Submits a customer order. |
+| GET | `/api/Order/{queueNumber}` | Retrieves an order using its queue number. |
+| GET | `/api/Order/history?contactNumber={number}` | Retrieves orders using a customer contact number. |
+| GET | `/api/Order/staff` | Retrieves orders for staff management. |
+| GET | `/api/Order/staff/{orderId}` | Retrieves a specific order for staff. |
+| PUT | `/api/Order/staff/{id}/status` | Updates an order status. |
+| PUT | `/api/Order/staff/{orderId}/payment` | Updates a payment status. |
+| GET | `/api/Order/staff/daily-sales` | Retrieves daily sales information. |
+
+Some endpoints require authentication and role authorization. Refer to Swagger for request formats, response details, and authorization requirements.
+
+## 13. Order and Payment Management
+
+### Order Statuses
+
+The system uses the following order statuses:
 
 | Status | Description |
 |---|---|
-| Pending | The order has been received. |
-| Preparing | The order is being prepared. |
-| Ready for Pickup | The order is ready for collection. |
-| Completed | The customer order has been completed. |
+| Pending | The order has been submitted and is awaiting preparation. |
+| Preparing | The staff is preparing the order. |
+| Ready for Pickup | The order is ready for the customer. |
+| Completed | The order has been completed. |
 | Cancelled | The order has been cancelled. |
 
-## Payment Methods and Statuses
+### Payment Methods
 
-The system supports the following payment methods:
+The system supports:
 
 - Cash
 - GCash
 
-Payment statuses:
+### Payment Statuses
 
-- Unpaid
-- Paid
+| Status | Description |
+|---|---|
+| Paid | The payment has been received. |
+| Unpaid | The payment has not yet been received. |
 
-## Testing and Verification
+## 14. Authentication and Security
+
+The system uses JSON Web Token (JWT) authentication for administrator and staff access.
+
+Security features include:
+
+- Password hashing through ASP.NET Core Identity PasswordHasher.
+- JWT-based authentication.
+- Role-based authorization.
+- Protected administrator and staff endpoints.
+- Customer access to public ordering functionality.
+- Sensitive configuration stored through .NET User Secrets during local development.
+
+JWT signing keys and account passwords must not be committed to the public repository.
+
+## 15. Testing
 
 The following functionalities should be tested:
 
-- Admin and staff authentication.
-- Role-based access and authorization.
-- Customer menu browsing.
-- Menu category and item management.
-- Menu variant selection.
-- Customer order submission.
-- Automatic queue number generation.
-- Order retrieval and tracking.
-- Order status updates.
-- Payment status updates.
-- Database record storage and retrieval.
-- Daily sales calculations.
-- Swagger API functionality.
+### Authentication
+- Administrator login.
+- Waiter login.
+- Invalid username and password handling.
+- Role-based access restrictions.
 
-## Security
+### Menu Management
+- Create a category.
+- Update a category.
+- Delete a category.
+- Create a menu item.
+- Update a menu item.
+- Delete a menu item.
+- Manage menu item variants and prices.
+- Verify menu item availability.
 
-The system uses JWT authentication to protect authorized API endpoints.
+### Customer Ordering
+- Display available menu items.
+- Select item variants.
+- Select quantities.
+- Submit customer information.
+- Place an order.
+- Verify order confirmation and queue number.
 
-Role-based authorization restricts administrative and staff operations according to their assigned roles.
+### Staff Order Management
+- View customer orders.
+- View order details.
+- Update order statuses.
+- Update payment statuses.
+- Verify daily sales information.
 
-Passwords are stored as password hashes rather than plain text.
+### Database
+- Verify that migrations are applied.
+- Confirm that records are saved in the database.
+- Verify relationships between categories, menu items, variants, orders, and order items.
 
-Development credentials and JWT signing keys must be configured locally and should not be exposed as production credentials.
+## 16. Git and Branching Strategy
 
-## Project Information
+The team follows a branch-based development workflow to separate each member's assigned responsibilities.
 
-**Project Title:** Restaurant Ordering and Menu Management System for Ange Cafe – UST Angelicum
+Each member works on their assigned branch and pushes changes to the GitHub repository.
+
+### Development Workflow
+
+1. Clone the repository.
+2. Switch to the assigned working branch.
+3. Implement the assigned features.
+4. Test the changes locally.
+5. Commit the changes with descriptive commit messages.
+6. Push the branch to GitHub.
+7. Create a Pull Request.
+8. Review and merge approved changes into the main branch.
+
+### Branch Responsibilities
+
+| Team Member | Feature Responsibility |
+|---|---|
+| Maxene Garcia | Project Foundation, Database, and Menu Management |
+| Althea Onez | Staff Order Management |
+| Nichole Pebris | Customer Ordering and Checkout |
+
+This workflow helps prevent conflicts and keeps each member's contributions organized.
+
+## 17. Project Information
+
+**Project Title:** Restaurant Ordering and Menu Management System for Ange Cafe – UST Angelicum College
+
+**Course:** Bachelor of Science in Information Technology
 
 **Institution:** UST Angelicum College
 
-**Program:** Bachelor of Science in Information Technology
-
 **Project Type:** Academic Group Project
 
-**Repository:** https://github.com/maxenegarcia/AngeCafe
+**Repository:** https://github.com/maxenegarcia/AngeCafe.git
 
-## License
+## 18. License
 
-This project was developed for academic purposes as part of a university project at UST Angelicum College.
+This project was developed for academic purposes at UST Angelicum College. It is intended for educational use and demonstration.
