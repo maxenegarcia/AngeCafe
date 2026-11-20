@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -14,10 +15,14 @@
         }
 
         :root {
-            --blue: #091957;
-            --gold: #C9A64D;
-            --background: #F5F8FC;
-            --text: #263449;
+            --black: #111111;
+            --gold: #D4AF37;
+            --gold-dark: #A17A20;
+            --background: #F8F8F8;
+            --text: #333333;
+            --gray: #777777;
+            --border: #E5E5E5;
+            --white: #FFFFFF;
         }
 
         body {
@@ -25,82 +30,115 @@
             color: var(--text);
         }
 
+        /* HEADER */
+
         .navbar {
-            background: var(--blue);
+            background: var(--black);
             color: white;
-            padding: 20px 6%;
+            padding: 20px 7%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 4px solid var(--gold);
+            border-bottom: 3px solid var(--gold);
             flex-wrap: wrap;
             gap: 12px;
         }
 
         .brand {
-            font-size: 21px;
+            font-size: 28px;
             font-weight: bold;
+            letter-spacing: 2px;
         }
+
+            .brand span {
+                color: var(--gold);
+            }
+
+            .brand small {
+                display: block;
+                color: var(--gold);
+                font-size: 11px;
+                letter-spacing: 3px;
+                margin-top: 4px;
+            }
 
         .navbar a {
             color: white;
             text-decoration: none;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
+            transition: .3s;
         }
+
+            .navbar a:hover {
+                color: var(--gold);
+            }
+
+        /* MAIN CONTENT */
 
         .container {
             max-width: 1200px;
-            margin: 35px auto;
-            padding: 0 20px;
+            margin: 40px auto;
+            padding: 0 25px;
         }
 
         .heading {
-            margin-bottom: 25px;
+            text-align: center;
+            margin-bottom: 35px;
         }
 
             .heading h1 {
-                color: var(--blue);
-                margin-bottom: 8px;
+                color: var(--black);
+                font-size: 34px;
+                letter-spacing: 2px;
+                margin-bottom: 10px;
             }
 
             .heading p {
-                color: #68778B;
-                font-size: 14px;
+                color: var(--gray);
+                font-size: 15px;
+                line-height: 1.6;
             }
 
         .gold-line {
-            width: 65px;
+            width: 75px;
             height: 4px;
             background: var(--gold);
-            margin-top: 15px;
+            margin: 15px auto;
+            border-radius: 5px;
         }
+
+        /* PANELS */
 
         .panel {
             background: white;
-            padding: 25px;
-            border: 1px solid #E0E8F0;
-            border-radius: 7px;
-            margin-bottom: 25px;
-            box-shadow: 0 3px 10px rgba(9,25,87,.05);
+            padding: 30px;
+            border: 1px solid var(--border);
+            border-top: 4px solid var(--gold);
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 3px 12px rgba(0,0,0,.06);
         }
 
             .panel h2 {
-                color: var(--blue);
-                font-size: 19px;
-                margin-bottom: 20px;
+                color: var(--black);
+                font-size: 20px;
+                margin-bottom: 22px;
+                letter-spacing: 1px;
             }
+
+        /* FORM */
 
         .form-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 17px;
+            gap: 18px;
         }
 
         .field {
             display: flex;
             flex-direction: column;
-            gap: 7px;
+            gap: 8px;
         }
 
             .field.full {
@@ -110,15 +148,16 @@
         label {
             font-size: 13px;
             font-weight: bold;
-            color: var(--blue);
+            color: var(--black);
         }
 
         input, select, textarea {
             width: 100%;
-            padding: 11px;
-            border: 1px solid #C9D7E5;
+            padding: 12px;
+            border: 1px solid #D5D5D5;
             border-radius: 5px;
             font-size: 14px;
+            background: #FAFAFA;
             outline: none;
         }
 
@@ -128,7 +167,7 @@
 
         textarea {
             resize: vertical;
-            min-height: 75px;
+            min-height: 85px;
         }
 
         .checkbox-field {
@@ -140,23 +179,27 @@
 
             .checkbox-field input {
                 width: auto;
+                accent-color: var(--gold);
             }
 
             .checkbox-field label {
                 font-weight: normal;
             }
 
+        /* VARIANTS */
+
         .variant-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin: 25px 0 12px;
+            margin: 28px 0 15px;
             gap: 10px;
         }
 
             .variant-header h3 {
-                color: var(--blue);
+                color: var(--black);
                 font-size: 16px;
+                letter-spacing: 1px;
             }
 
         .variant-row {
@@ -164,11 +207,11 @@
             grid-template-columns: 1.5fr 1fr 1fr auto;
             gap: 10px;
             align-items: center;
-            margin-bottom: 10px;
-            padding: 12px;
-            background: #F5F8FC;
-            border: 1px solid #E0E8F0;
-            border-radius: 5px;
+            margin-bottom: 12px;
+            padding: 14px;
+            background: #FAFAFA;
+            border: 1px solid var(--border);
+            border-radius: 6px;
         }
 
             .variant-row .available-check {
@@ -180,31 +223,44 @@
 
                 .variant-row .available-check input {
                     width: auto;
+                    accent-color: var(--gold);
                 }
+
+        /* BUTTONS */
 
         button {
             border: none;
             border-radius: 5px;
-            padding: 11px 17px;
+            padding: 12px 17px;
             cursor: pointer;
             font-size: 13px;
             font-weight: bold;
             transition: .2s;
         }
 
+            button:disabled {
+                opacity: .6;
+                cursor: not-allowed;
+            }
+
         .primary-btn {
-            background: var(--blue);
+            background: var(--black);
             color: white;
         }
 
-            .primary-btn:hover {
-                background: #172d70;
+            .primary-btn:hover:not(:disabled) {
+                background: var(--gold-dark);
             }
 
         .gold-btn {
             background: var(--gold);
-            color: white;
+            color: var(--black);
         }
+
+            .gold-btn:hover:not(:disabled) {
+                background: var(--gold-dark);
+                color: white;
+            }
 
         .remove-btn {
             background: #B33A3A;
@@ -212,10 +268,18 @@
             padding: 9px 12px;
         }
 
+            .remove-btn:hover {
+                background: #8E2929;
+            }
+
         .edit-btn {
-            background: #E8F0FA;
-            color: var(--blue);
+            background: #F5F0DF;
+            color: var(--black);
         }
+
+            .edit-btn:hover {
+                background: var(--gold);
+            }
 
         .deactivate-btn {
             background: #FCE8E8;
@@ -229,64 +293,85 @@
 
         .actions {
             display: flex;
-            gap: 9px;
+            gap: 10px;
             flex-wrap: wrap;
-            margin-top: 22px;
+            margin-top: 25px;
         }
 
         .cancel-btn {
-            background: #E7EAF0;
-            color: #333;
+            background: #EEEEEE;
+            color: #333333;
         }
+
+            .cancel-btn:hover {
+                background: #DDDDDD;
+            }
+
+        /* MENU LIST */
 
         .menu-list {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 18px;
+            gap: 22px;
         }
 
         .menu-card {
             background: white;
-            border: 1px solid #E0E8F0;
+            border: 1px solid var(--border);
             border-top: 4px solid var(--gold);
-            border-radius: 7px;
-            padding: 20px;
-            box-shadow: 0 3px 10px rgba(9,25,87,.05);
+            border-radius: 8px;
+            padding: 22px;
+            box-shadow: 0 3px 12px rgba(0,0,0,.06);
+            transition: .2s;
         }
 
+            .menu-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 7px 18px rgba(0,0,0,.10);
+            }
+
             .menu-card h3 {
-                color: var(--blue);
+                color: var(--black);
+                font-size: 18px;
                 margin-bottom: 8px;
             }
 
             .menu-card p {
-                color: #68778B;
+                color: var(--gray);
                 font-size: 13px;
                 margin-bottom: 10px;
+                line-height: 1.6;
             }
 
             .menu-card ul {
                 list-style: none;
-                margin: 12px 0;
+                margin: 15px 0;
             }
 
             .menu-card li {
                 font-size: 13px;
-                padding: 6px 0;
-                border-bottom: 1px solid #EDF0F4;
+                padding: 8px 0;
+                border-bottom: 1px solid var(--border);
+                color: #555555;
             }
 
         .card-actions {
             display: flex;
-            gap: 8px;
+            gap: 9px;
             flex-wrap: wrap;
-            margin-top: 15px;
+            margin-top: 18px;
         }
+
+        .inactive {
+            opacity: .65;
+        }
+
+        /* MESSAGES */
 
         .status {
             font-size: 13px;
-            padding: 12px;
-            margin-bottom: 15px;
+            padding: 13px;
+            margin-bottom: 18px;
             border-radius: 5px;
             display: none;
         }
@@ -303,26 +388,42 @@
             color: #A52D2D;
         }
 
-        .inactive {
-            opacity: .65;
+        .empty {
+            color: var(--gray);
+            text-align: center;
+            padding: 30px;
+            grid-column: 1 / -1;
         }
 
-        .empty {
-            color: #68778B;
-            text-align: center;
-            padding: 25px;
-        }
+        /* FOOTER */
 
         footer {
-            background: var(--blue);
+            background: var(--black);
             color: white;
             text-align: center;
-            padding: 22px;
+            padding: 25px 15px;
             border-top: 4px solid var(--gold);
             font-size: 13px;
+            margin-top: 60px;
         }
 
+            footer p {
+                line-height: 1.7;
+            }
+
+            footer span {
+                color: var(--gold);
+                font-weight: bold;
+            }
+
+        /* RESPONSIVE */
+
         @media(max-width: 650px) {
+            .navbar {
+                flex-direction: column;
+                text-align: center;
+            }
+
             .form-grid {
                 grid-template-columns: 1fr;
             }
@@ -343,8 +444,16 @@
                     grid-column: 2;
                 }
 
-            .navbar {
-                flex-direction: column;
+            .heading h1 {
+                font-size: 27px;
+            }
+
+            .container {
+                padding: 0 15px;
+            }
+
+            .panel {
+                padding: 20px;
             }
         }
     </style>
@@ -352,22 +461,36 @@
 
 <body>
 
+    <!-- HEADER -->
+
     <nav class="navbar">
-        <div class="brand">ANGE CAFE | ADMIN</div>
+
+        <div class="brand">
+            ANGE <span>CAFE</span>
+            <small>UST ANGELICUM</small>
+        </div>
+
         <a href="/menu.html">VIEW CUSTOMER MENU</a>
+
     </nav>
+
+    <!-- MAIN CONTENT -->
 
     <main class="container">
 
         <div class="heading">
-            <h1>Menu Management</h1>
-            <p>Add, edit, and manage Ange Cafe menu items and prices.</p>
+            <h1>MENU MANAGEMENT</h1>
             <div class="gold-line"></div>
+            <p>Restaurant Ordering and Menu Management System</p>
+            <p style="margin-top: 8px;">
+                Add, edit, and manage Ange Cafe menu items and prices.
+            </p>
         </div>
 
         <div id="message" class="status"></div>
 
         <!-- ADD / EDIT FORM -->
+
         <section class="panel">
 
             <h2 id="formTitle">Add New Menu Item</h2>
@@ -409,64 +532,74 @@
                 </div>
 
                 <div class="variant-header">
-                    <h3>Menu Item Variants</h3>
+                    <h3>MENU ITEM VARIANTS</h3>
+
                     <button type="button" class="gold-btn"
                             onclick="addVariantRow()">
-                        + Add Variant
+                        + ADD VARIANT
                     </button>
                 </div>
 
                 <div id="variantContainer"></div>
 
                 <div class="actions">
+
                     <button type="submit" class="primary-btn" id="saveBtn">
-                        Save Menu Item
+                        SAVE MENU ITEM
                     </button>
 
                     <button type="button" class="cancel-btn"
                             onclick="resetForm()">
-                        Clear Form
+                        CLEAR FORM
                     </button>
+
                 </div>
 
             </form>
+
         </section>
 
-        <!-- MENU ITEM LIST -->
-        <<section class="panel">
-    <h2>Existing Menu Items</h2>
+        <!-- EXISTING MENU ITEMS -->
 
-    <div class="form-grid" style="margin-bottom:20px;">
+        <section class="panel">
 
-        <div class="field">
-            <label for="searchItem">Search Menu Item</label>
-            <input
-                type="text"
-                id="searchItem"
-                placeholder="Search by item name..."
-                oninput="displayItems()">
-        </div>
+            <h2>EXISTING MENU ITEMS</h2>
 
-        <div class="field">
-            <label for="filterCategory">Filter by Category</label>
-            <select id="filterCategory" onchange="displayItems()">
-                <option value="All">All Categories</option>
-            </select>
-        </div>
+            <div class="form-grid" style="margin-bottom: 25px;">
 
-    </div>
+                <div class="field">
+                    <label for="searchItem">Search Menu Item</label>
+                    <input type="text"
+                           id="searchItem"
+                           placeholder="Search by item name..."
+                           oninput="displayItems()">
+                </div>
 
-    <div id="menuList" class="menu-list">
-        <p class="empty">Loading menu items...</p>
-    </div>
-</section>
+                <div class="field">
+                    <label for="filterCategory">Filter by Category</label>
+                    <select id="filterCategory" onchange="displayItems()">
+                        <option value="All">All Categories</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div id="menuList" class="menu-list">
+                <p class="empty">Loading menu items...</p>
+            </div>
+
+        </section>
 
     </main>
 
+    <!-- FOOTER -->
+
     <footer>
-        <p>ANGE CAFE | Menu Management System</p>
+        <p><span>ANGE CAFE</span> | UST Angelicum College</p>
         <p>© 2026 Ange Cafe. All Rights Reserved.</p>
     </footer>
+
+    <!-- JAVASCRIPT -->
 
     <script>
 
@@ -478,6 +611,7 @@
         let editingId = null;
 
         const form = document.getElementById("menuForm");
+
         const variantContainer =
             document.getElementById("variantContainer");
 
@@ -487,7 +621,9 @@
         // LOAD CATEGORIES AND MENU ITEMS
 
         async function initializePage() {
+
             try {
+
                 const [categoryResponse, menuResponse] =
                     await Promise.all([
                         fetch(CATEGORY_URL),
@@ -507,9 +643,12 @@
                 addVariantRow();
 
             } catch (error) {
+
                 showMessage(error.message, "error");
+
                 menuList.innerHTML =
                     '<p class="empty">Unable to load menu items.</p>';
+
                 console.error(error);
             }
         }
@@ -517,6 +656,7 @@
         // POPULATE CATEGORY DROPDOWNS
 
         function populateCategories() {
+
             const categorySelect =
                 document.getElementById("categoryId");
 
@@ -530,14 +670,19 @@
                 '<option value="All">All Categories</option>';
 
             categories.forEach(category => {
+
                 const option1 = document.createElement("option");
+
                 option1.value = category.categoryId;
                 option1.textContent = category.categoryName;
+
                 categorySelect.appendChild(option1);
 
                 const option2 = document.createElement("option");
+
                 option2.value = category.categoryId;
                 option2.textContent = category.categoryName;
+
                 filterSelect.appendChild(option2);
             });
         }
@@ -545,10 +690,12 @@
         // ADD VARIANT INPUT ROW
 
         function addVariantRow(name = "", price = "", available = true) {
+
             const row = document.createElement("div");
             row.className = "variant-row";
 
             const nameInput = document.createElement("input");
+
             nameInput.type = "text";
             nameInput.className = "variant-name";
             nameInput.placeholder = "Variant name (e.g. Hot)";
@@ -556,6 +703,7 @@
             nameInput.required = true;
 
             const priceInput = document.createElement("input");
+
             priceInput.type = "number";
             priceInput.className = "variant-price";
             priceInput.placeholder = "Price";
@@ -568,6 +716,7 @@
             checkLabel.className = "available-check";
 
             const checkInput = document.createElement("input");
+
             checkInput.type = "checkbox";
             checkInput.className = "variant-available";
             checkInput.checked = available;
@@ -576,6 +725,7 @@
             checkLabel.append(" Available");
 
             const removeButton = document.createElement("button");
+
             removeButton.type = "button";
             removeButton.className = "remove-btn";
             removeButton.textContent = "Remove";
@@ -595,10 +745,12 @@
         // GET VARIANTS FROM FORM
 
         function getVariantsFromForm() {
+
             const rows =
                 document.querySelectorAll(".variant-row");
 
             return Array.from(rows).map(row => ({
+
                 variantName:
                     row.querySelector(".variant-name").value.trim(),
 
@@ -607,32 +759,44 @@
 
                 isAvailable:
                     row.querySelector(".variant-available").checked
+
             }));
         }
 
         // SAVE NEW OR UPDATED MENU ITEM
 
-        form.addEventListener("submit", async function(event) {
+        form.addEventListener("submit", async function (event) {
+
             event.preventDefault();
 
             const variants = getVariantsFromForm();
 
             if (variants.length === 0) {
-                showMessage("Please add at least one variant.", "error");
+
+                showMessage(
+                    "Please add at least one variant.",
+                    "error"
+                );
+
                 return;
             }
 
             if (variants.some(v =>
-                !v.variantName || !Number.isFinite(v.price) || v.price <= 0
+                !v.variantName ||
+                !Number.isFinite(v.price) ||
+                v.price <= 0
             )) {
+
                 showMessage(
                     "Please provide a valid name and positive price for every variant.",
                     "error"
                 );
+
                 return;
             }
 
             const request = {
+
                 categoryId: Number(
                     document.getElementById("categoryId").value
                 ),
@@ -653,15 +817,22 @@
             };
 
             if (!request.categoryId || !request.itemName) {
-                showMessage("Please complete all required fields.", "error");
+
+                showMessage(
+                    "Please complete all required fields.",
+                    "error"
+                );
+
                 return;
             }
 
             const saveBtn = document.getElementById("saveBtn");
+
             saveBtn.disabled = true;
             saveBtn.textContent = "Saving...";
 
             try {
+
                 const url = editingId
                     ? `${API_URL}/${editingId}`
                     : API_URL;
@@ -669,16 +840,24 @@
                 const method = editingId ? "PUT" : "POST";
 
                 const response = await fetch(url, {
+
                     method: method,
+
                     headers: {
                         "Content-Type": "application/json"
                     },
+
                     body: JSON.stringify(request)
+
                 });
 
                 if (!response.ok) {
+
                     const errorText = await response.text();
-                    throw new Error(errorText || "Unable to save menu item.");
+
+                    throw new Error(
+                        errorText || "Unable to save menu item."
+                    );
                 }
 
                 showMessage(
@@ -689,21 +868,25 @@
                 );
 
                 resetForm();
+
                 await refreshMenu();
 
             } catch (error) {
+
                 showMessage(error.message, "error");
                 console.error(error);
 
             } finally {
+
                 saveBtn.disabled = false;
-                saveBtn.textContent = "Save Menu Item";
+                saveBtn.textContent = "SAVE MENU ITEM";
             }
         });
 
         // REFRESH MENU ITEMS
 
         async function refreshMenu() {
+
             const response = await fetch(API_URL);
 
             if (!response.ok) {
@@ -711,12 +894,14 @@
             }
 
             menuItems = await response.json();
+
             displayItems();
         }
 
         // DISPLAY MENU ITEMS
 
         function displayItems() {
+
             menuList.innerHTML = "";
 
             const selectedFilter =
@@ -728,6 +913,7 @@
                     .toLowerCase();
 
             const filteredItems = menuItems.filter(item => {
+
                 const matchesCategory =
                     selectedFilter === "All" ||
                     Number(item.categoryId) === Number(selectedFilter);
@@ -739,13 +925,17 @@
             });
 
             if (filteredItems.length === 0) {
+
                 menuList.innerHTML =
                     '<p class="empty">No matching menu items found.</p>';
+
                 return;
             }
 
             filteredItems.forEach(item => {
+
                 const card = document.createElement("article");
+
                 card.className = "menu-card";
 
                 if (!item.isActive) {
@@ -756,22 +946,28 @@
                 title.textContent = item.itemName;
 
                 const category = document.createElement("p");
-                category.textContent = item.categoryName || "Uncategorized";
+                category.textContent =
+                    item.categoryName || "Uncategorized";
 
                 const description = document.createElement("p");
-                description.textContent = item.description || "No description";
+                description.textContent =
+                    item.description || "No description";
 
                 const status = document.createElement("p");
-                status.textContent = item.isActive ? "Active" : "Inactive";
+                status.textContent =
+                    item.isActive ? "Active" : "Inactive";
 
                 const variantList = document.createElement("ul");
 
                 (item.variants || []).forEach(variant => {
+
                     const li = document.createElement("li");
 
                     li.textContent =
                         `${variant.variantName} — ₱${Number(variant.price).toFixed(2)} — ` +
-                        (variant.isAvailable ? "Available" : "Unavailable");
+                        (variant.isAvailable
+                            ? "Available"
+                            : "Unavailable");
 
                     variantList.appendChild(li);
                 });
@@ -780,20 +976,28 @@
                 buttons.className = "card-actions";
 
                 const editButton = document.createElement("button");
+
                 editButton.className = "edit-btn";
                 editButton.textContent = "Edit";
-                editButton.onclick = () => editItem(item.menuItemId);
+
+                editButton.onclick = () =>
+                    editItem(item.menuItemId);
 
                 const statusButton = document.createElement("button");
 
                 if (item.isActive) {
+
                     statusButton.className = "deactivate-btn";
                     statusButton.textContent = "Deactivate";
+
                     statusButton.onclick = () =>
                         deactivateItem(item.menuItemId);
+
                 } else {
+
                     statusButton.className = "activate-btn";
                     statusButton.textContent = "Activate";
+
                     statusButton.onclick = () =>
                         editItem(item.menuItemId);
                 }
@@ -815,6 +1019,7 @@
         // EDIT MENU ITEM
 
         function editItem(id) {
+
             const item = menuItems.find(
                 m => m.menuItemId === id
             );
@@ -844,6 +1049,7 @@
             variantContainer.innerHTML = "";
 
             (item.variants || []).forEach(variant => {
+
                 addVariantRow(
                     variant.variantName,
                     variant.price,
@@ -856,7 +1062,7 @@
             }
 
             document.getElementById("saveBtn").textContent =
-                "Update Menu Item";
+                "UPDATE MENU ITEM";
 
             document.getElementById("formTitle").scrollIntoView({
                 behavior: "smooth"
@@ -866,6 +1072,7 @@
         // DEACTIVATE MENU ITEM
 
         async function deactivateItem(id) {
+
             const confirmed = confirm(
                 "Are you sure you want to deactivate this menu item?"
             );
@@ -873,6 +1080,7 @@
             if (!confirmed) return;
 
             try {
+
                 const response = await fetch(`${API_URL}/${id}`, {
                     method: "DELETE"
                 });
@@ -889,6 +1097,7 @@
                 await refreshMenu();
 
             } catch (error) {
+
                 showMessage(error.message, "error");
             }
         }
@@ -896,23 +1105,26 @@
         // RESET FORM
 
         function resetForm() {
+
             form.reset();
+
             editingId = null;
 
             document.getElementById("formTitle").textContent =
                 "Add New Menu Item";
 
             document.getElementById("saveBtn").textContent =
-                "Save Menu Item";
+                "SAVE MENU ITEM";
 
             variantContainer.innerHTML = "";
-            addVariantRow();
 
+            addVariantRow();
         }
 
         // SHOW MESSAGE
 
         function showMessage(text, type) {
+
             message.textContent = text;
             message.className = "status " + type;
 

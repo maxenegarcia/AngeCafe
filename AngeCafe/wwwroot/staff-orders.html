@@ -1,0 +1,902 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ange Cafe | Order Management</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        :root {
+            --black: #111111;
+            --gold: #D4AF37;
+            --gold-dark: #A17A20;
+            --white: #FFFFFF;
+            --light-bg: #F8F8F8;
+            --text: #333333;
+            --gray: #777777;
+            --border: #E5E5E5;
+        }
+
+        body {
+            background: var(--light-bg);
+            color: var(--text);
+        }
+
+        /* HEADER */
+
+        .main-header {
+            background-color: var(--black);
+            padding: 20px 7%;
+            border-bottom: 3px solid var(--gold);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .brand h1 {
+            color: var(--white);
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+            .brand h1 span {
+                color: var(--gold);
+            }
+
+        .brand p {
+            color: var(--gold);
+            font-size: 11px;
+            letter-spacing: 3px;
+            margin-top: 4px;
+        }
+
+        .navigation {
+            display: flex;
+            gap: 30px;
+        }
+
+            .navigation a {
+                color: var(--white);
+                text-decoration: none;
+                font-size: 13px;
+                font-weight: bold;
+                transition: .3s;
+            }
+
+                .navigation a:hover {
+                    color: var(--gold);
+                }
+
+        /* MAIN CONTENT */
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 25px;
+            min-height: 450px;
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+            .intro h1 {
+                color: var(--black);
+                font-size: 34px;
+                letter-spacing: 2px;
+                margin-bottom: 10px;
+            }
+
+        .gold-line {
+            width: 75px;
+            height: 4px;
+            background: var(--gold);
+            margin: 15px auto;
+            border-radius: 5px;
+        }
+
+        .intro p {
+            color: var(--gray);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        /* SUMMARY */
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 18px;
+            margin-bottom: 35px;
+        }
+
+        .summary-card {
+            background: var(--white);
+            padding: 22px;
+            border: 1px solid var(--border);
+            border-top: 4px solid var(--gold);
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 3px 12px rgba(0,0,0,.06);
+        }
+
+            .summary-card h3 {
+                color: var(--gray);
+                font-size: 13px;
+                margin-bottom: 10px;
+            }
+
+            .summary-card p {
+                color: var(--gold-dark);
+                font-size: 27px;
+                font-weight: bold;
+            }
+
+        /* ORDER PANEL */
+
+        .order-section {
+            background: var(--white);
+            padding: 30px;
+            border: 1px solid var(--border);
+            border-top: 4px solid var(--gold);
+            border-radius: 8px;
+            box-shadow: 0 3px 12px rgba(0,0,0,.06);
+        }
+
+        .section-heading {
+            text-align: center;
+            color: var(--black);
+            font-size: 21px;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 25px 0;
+        }
+
+            .toolbar input,
+            .toolbar select {
+                padding: 12px;
+                border: 1px solid #D5D5D5;
+                border-radius: 5px;
+                background: #FAFAFA;
+                font-size: 14px;
+                outline: none;
+            }
+
+            .toolbar input {
+                flex: 1;
+                min-width: 220px;
+            }
+
+                .toolbar input:focus,
+                select:focus {
+                    border-color: var(--gold);
+                }
+
+        button {
+            border: none;
+            border-radius: 5px;
+            padding: 12px 17px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            transition: .2s;
+        }
+
+            button:disabled {
+                background: #AAAAAA;
+                cursor: not-allowed;
+            }
+
+        .primary-btn {
+            background: var(--black);
+            color: var(--white);
+        }
+
+            .primary-btn:hover:not(:disabled) {
+                background: var(--gold-dark);
+            }
+
+        .gold-btn {
+            background: var(--gold);
+            color: var(--black);
+        }
+
+            .gold-btn:hover:not(:disabled) {
+                background: var(--gold-dark);
+                color: var(--white);
+            }
+
+        /* ORDER CARDS */
+
+        .order-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 22px;
+        }
+
+        .order-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-top: 4px solid var(--gold);
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 3px 12px rgba(0,0,0,.06);
+            transition: transform .2s, box-shadow .2s;
+        }
+
+            .order-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 7px 18px rgba(0,0,0,.10);
+            }
+
+            .order-card h3 {
+                color: var(--black);
+                font-size: 19px;
+                margin-bottom: 15px;
+            }
+
+        .order-info p {
+            color: var(--gray);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .order-info strong {
+            color: var(--black);
+        }
+
+        .order-items {
+            margin-top: 18px;
+            padding: 15px 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+            .order-items h4 {
+                color: var(--black);
+                font-size: 15px;
+                margin-bottom: 10px;
+            }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 7px 0;
+            font-size: 13px;
+            color: var(--gray);
+        }
+
+        .total {
+            color: var(--gold-dark);
+            font-size: 19px;
+            font-weight: bold;
+            margin-top: 17px;
+        }
+
+        /* STATUS LABELS */
+
+        .status-label {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            background: #F5F0DF;
+            color: var(--gold-dark);
+        }
+
+        /* CONTROLS */
+
+        .control-group {
+            margin-top: 20px;
+        }
+
+            .control-group label {
+                display: block;
+                font-size: 13px;
+                font-weight: bold;
+                color: var(--black);
+                margin-bottom: 9px;
+            }
+
+        .control-row {
+            display: flex;
+            gap: 8px;
+        }
+
+            .control-row select {
+                flex: 1;
+                min-width: 0;
+                padding: 11px;
+                border: 1px solid #D5D5D5;
+                border-radius: 5px;
+                background: #FAFAFA;
+                font-size: 13px;
+            }
+
+        /* MESSAGES */
+
+        .message {
+            display: none;
+            padding: 13px;
+            border-radius: 5px;
+            margin-bottom: 18px;
+            font-size: 13px;
+            text-align: center;
+        }
+
+            .message.success {
+                display: block;
+                background: #E3F5E8;
+                color: #237A3B;
+            }
+
+            .message.error {
+                display: block;
+                background: #FCE8E8;
+                color: #A52D2D;
+            }
+
+        .empty {
+            text-align: center;
+            padding: 35px;
+            color: var(--gray);
+            font-size: 14px;
+            grid-column: 1 / -1;
+        }
+
+        /* FOOTER */
+
+        footer {
+            margin-top: 60px;
+            padding: 25px 15px;
+            background: var(--black);
+            color: var(--white);
+            text-align: center;
+            border-top: 4px solid var(--gold);
+        }
+
+            footer p {
+                font-size: 13px;
+                line-height: 1.7;
+            }
+
+            footer span {
+                color: var(--gold);
+                font-weight: bold;
+            }
+
+        /* MOBILE */
+
+        @media(max-width: 600px) {
+            .header-content {
+                flex-direction: column;
+                gap: 18px;
+                text-align: center;
+            }
+
+            .navigation {
+                justify-content: center;
+                gap: 15px;
+                flex-wrap: wrap;
+            }
+
+            .intro h1 {
+                font-size: 27px;
+            }
+
+            .container {
+                margin-top: 30px;
+                padding: 0 15px;
+            }
+
+            .order-section {
+                padding: 18px;
+            }
+
+            .order-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .control-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <header class="main-header">
+        <div class="header-content">
+
+            <div class="brand">
+                <h1>ANGE <span>CAFE</span></h1>
+                <p>UST ANGELICUM</p>
+            </div>
+
+            <nav class="navigation">
+                <a href="/menu.html">CUSTOMER MENU</a>
+                <a href="/admin-menu.html">MENU MANAGEMENT</a>
+            </nav>
+
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+
+    <main class="container">
+
+        <section class="intro">
+            <h1>ORDER MANAGEMENT</h1>
+            <div class="gold-line"></div>
+            <p>Restaurant Ordering and Menu Management System</p>
+            <p style="margin-top:8px;">
+                Manage customer orders and monitor payments.
+            </p>
+        </section>
+
+        <!-- SUMMARY -->
+
+        <section class="summary-grid">
+
+            <div class="summary-card">
+                <h3>TOTAL ORDERS</h3>
+                <p id="totalOrders">0</p>
+            </div>
+
+            <div class="summary-card">
+                <h3>PENDING ORDERS</h3>
+                <p id="pendingOrders">0</p>
+            </div>
+
+            <div class="summary-card">
+                <h3>COMPLETED ORDERS</h3>
+                <p id="completedOrders">0</p>
+            </div>
+
+            <div class="summary-card">
+                <h3>UNPAID ORDERS</h3>
+                <p id="unpaidOrders">0</p>
+            </div>
+
+        </section>
+
+        <!-- ORDER LIST -->
+
+        <section class="order-section">
+
+            <h2 class="section-heading">CUSTOMER ORDERS</h2>
+            <div class="gold-line"></div>
+
+            <div id="message" class="message"></div>
+
+            <div class="toolbar">
+
+                <input type="text"
+                       id="searchOrder"
+                       placeholder="Search customer or queue number..."
+                       oninput="displayOrders()">
+
+                <select id="filterStatus" onchange="displayOrders()">
+                    <option value="All">All Order Statuses</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Preparing">Preparing</option>
+                    <option value="Ready">Ready</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Cancelled">Cancelled</option>
+                </select>
+
+                <button class="primary-btn" onclick="loadOrders()">
+                    REFRESH ORDERS
+                </button>
+
+            </div>
+
+            <div id="orderList" class="order-grid">
+                <p class="empty">Loading orders...</p>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+
+    <footer>
+        <p><span>ANGE CAFE</span> | UST Angelicum College</p>
+        <p>© 2026 Ange Cafe. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+
+        const API_URL = "/api/Order/staff";
+
+        let orders = [];
+
+        const orderList = document.getElementById("orderList");
+        const message = document.getElementById("message");
+
+        // LOAD ORDERS
+
+        async function loadOrders() {
+
+            orderList.innerHTML =
+                '<p class="empty">Loading orders...</p>';
+
+            try {
+
+                const response = await fetch(API_URL);
+
+                if (!response.ok) {
+                    throw new Error("Unable to load customer orders.");
+                }
+
+                orders = await response.json();
+
+                updateSummary();
+                displayOrders();
+
+            } catch (error) {
+
+                orderList.innerHTML =
+                    '<p class="empty">Unable to load orders.</p>';
+
+                showMessage(error.message, "error");
+                console.error(error);
+            }
+        }
+
+        // UPDATE SUMMARY
+
+        function updateSummary() {
+
+            document.getElementById("totalOrders").textContent =
+                orders.length;
+
+            document.getElementById("pendingOrders").textContent =
+                orders.filter(o => o.orderStatus === "Pending").length;
+
+            document.getElementById("completedOrders").textContent =
+                orders.filter(o => o.orderStatus === "Completed").length;
+
+            document.getElementById("unpaidOrders").textContent =
+                orders.filter(o => o.paymentStatus === "Unpaid").length;
+        }
+
+        // DISPLAY ORDERS
+
+        function displayOrders() {
+
+            orderList.innerHTML = "";
+
+            const searchText = document
+                .getElementById("searchOrder")
+                .value.trim().toLowerCase();
+
+            const selectedStatus =
+                document.getElementById("filterStatus").value;
+
+            const filteredOrders = orders.filter(order => {
+
+                const matchesSearch =
+                    String(order.customerName || "")
+                        .toLowerCase().includes(searchText) ||
+                    String(order.queueNumber || "")
+                        .toLowerCase().includes(searchText);
+
+                const matchesStatus =
+                    selectedStatus === "All" ||
+                    order.orderStatus === selectedStatus;
+
+                return matchesSearch && matchesStatus;
+            });
+
+            if (filteredOrders.length === 0) {
+
+                orderList.innerHTML =
+                    '<p class="empty">No customer orders found.</p>';
+
+                return;
+            }
+
+            filteredOrders.forEach(order => {
+
+                const card = document.createElement("article");
+                card.className = "order-card";
+
+                const title = document.createElement("h3");
+                title.textContent = "ORDER #" + order.orderId;
+
+                const info = document.createElement("div");
+                info.className = "order-info";
+
+                const orderDate = order.orderDate
+                    ? new Date(order.orderDate).toLocaleString()
+                    : "Not available";
+
+                const details = [
+                    ["Queue Number", order.queueNumber],
+                    ["Customer", order.customerName],
+                    ["Contact", order.contactNumber],
+                    ["Date", orderDate],
+                    ["Payment Method", order.paymentMethod]
+                ];
+
+                details.forEach(([label, value]) => {
+                    const p = document.createElement("p");
+                    const strong = document.createElement("strong");
+
+                    strong.textContent = label + ": ";
+
+                    p.appendChild(strong);
+                    p.appendChild(
+                        document.createTextNode(value ?? "Not available")
+                    );
+
+                    info.appendChild(p);
+                });
+
+                const orderStatus = document.createElement("p");
+                orderStatus.innerHTML = "<strong>Order Status:</strong> ";
+
+                const orderBadge = document.createElement("span");
+                orderBadge.className = "status-label";
+                orderBadge.textContent = order.orderStatus;
+
+                orderStatus.appendChild(orderBadge);
+                info.appendChild(orderStatus);
+
+                const paymentStatus = document.createElement("p");
+                paymentStatus.innerHTML = "<strong>Payment Status:</strong> ";
+
+                const paymentBadge = document.createElement("span");
+                paymentBadge.className = "status-label";
+                paymentBadge.textContent = order.paymentStatus;
+
+                paymentStatus.appendChild(paymentBadge);
+                info.appendChild(paymentStatus);
+
+                // ORDERED ITEMS
+
+                const itemsSection = document.createElement("div");
+                itemsSection.className = "order-items";
+
+                const itemsTitle = document.createElement("h4");
+                itemsTitle.textContent = "ORDERED ITEMS";
+
+                itemsSection.appendChild(itemsTitle);
+
+                (order.items || []).forEach(item => {
+
+                    const itemRow = document.createElement("div");
+                    itemRow.className = "item-row";
+
+                    const itemName = document.createElement("span");
+                    itemName.textContent =
+                        `${item.itemName} - ${item.variantName} x${item.quantity}`;
+
+                    const subtotal = document.createElement("strong");
+                    subtotal.textContent =
+                        "₱" + Number(item.subtotal).toFixed(2);
+
+                    itemRow.appendChild(itemName);
+                    itemRow.appendChild(subtotal);
+
+                    itemsSection.appendChild(itemRow);
+                });
+
+                const total = document.createElement("p");
+                total.className = "total";
+                total.textContent =
+                    "TOTAL: ₱" +
+                    Number(order.totalAmount).toFixed(2);
+
+                // ORDER STATUS CONTROL
+
+                const statusGroup = document.createElement("div");
+                statusGroup.className = "control-group";
+
+                const statusLabel = document.createElement("label");
+                statusLabel.textContent = "UPDATE ORDER STATUS";
+
+                const statusRow = document.createElement("div");
+                statusRow.className = "control-row";
+
+                const statusSelect = document.createElement("select");
+
+                [
+                    "Pending",
+                    "Preparing",
+                    "Ready",
+                    "Completed",
+                    "Cancelled"
+                ].forEach(status => {
+
+                    const option = document.createElement("option");
+                    option.value = status;
+                    option.textContent = status;
+
+                    if (status === order.orderStatus) {
+                        option.selected = true;
+                    }
+
+                    statusSelect.appendChild(option);
+                });
+
+                const statusButton = document.createElement("button");
+                statusButton.className = "primary-btn";
+                statusButton.textContent = "UPDATE";
+
+                statusButton.onclick = () =>
+                    updateOrderStatus(order.orderId, statusSelect.value);
+
+                statusRow.appendChild(statusSelect);
+                statusRow.appendChild(statusButton);
+
+                statusGroup.appendChild(statusLabel);
+                statusGroup.appendChild(statusRow);
+
+                // PAYMENT STATUS CONTROL
+
+                const paymentGroup = document.createElement("div");
+                paymentGroup.className = "control-group";
+
+                const paymentLabel = document.createElement("label");
+                paymentLabel.textContent = "UPDATE PAYMENT STATUS";
+
+                const paymentRow = document.createElement("div");
+                paymentRow.className = "control-row";
+
+                const paymentSelect = document.createElement("select");
+
+                ["Unpaid", "Paid"].forEach(status => {
+
+                    const option = document.createElement("option");
+                    option.value = status;
+                    option.textContent = status;
+
+                    if (status === order.paymentStatus) {
+                        option.selected = true;
+                    }
+
+                    paymentSelect.appendChild(option);
+                });
+
+                const paymentButton = document.createElement("button");
+                paymentButton.className = "gold-btn";
+                paymentButton.textContent = "UPDATE";
+
+                paymentButton.onclick = () =>
+                    updatePaymentStatus(order.orderId, paymentSelect.value);
+
+                paymentRow.appendChild(paymentSelect);
+                paymentRow.appendChild(paymentButton);
+
+                paymentGroup.appendChild(paymentLabel);
+                paymentGroup.appendChild(paymentRow);
+
+                // ADD CARD ELEMENTS
+
+                card.appendChild(title);
+                card.appendChild(info);
+                card.appendChild(itemsSection);
+                card.appendChild(total);
+                card.appendChild(statusGroup);
+                card.appendChild(paymentGroup);
+
+                orderList.appendChild(card);
+            });
+        }
+
+        // UPDATE ORDER STATUS
+
+        async function updateOrderStatus(orderId, newStatus) {
+
+            try {
+
+                const response = await fetch(
+                    `${API_URL}/${orderId}/status`,
+                    {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(newStatus)
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error("Unable to update order status.");
+                }
+
+                showMessage(
+                    "Order status updated successfully!",
+                    "success"
+                );
+
+                await loadOrders();
+
+            } catch (error) {
+
+                showMessage(error.message, "error");
+                console.error(error);
+            }
+        }
+
+        // UPDATE PAYMENT STATUS
+
+        async function updatePaymentStatus(orderId, newStatus) {
+
+            try {
+
+                const response = await fetch(
+                    `${API_URL}/${orderId}/payment`,
+                    {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(newStatus)
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error("Unable to update payment status.");
+                }
+
+                showMessage(
+                    "Payment status updated successfully!",
+                    "success"
+                );
+
+                await loadOrders();
+
+            } catch (error) {
+
+                showMessage(error.message, "error");
+                console.error(error);
+            }
+        }
+
+        // SHOW MESSAGE
+
+        function showMessage(text, type) {
+            message.textContent = text;
+            message.className = "message " + type;
+        }
+
+        // START PAGE
+
+        loadOrders();
+
+    </script>
+
+</body>
+</html>

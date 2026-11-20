@@ -1,9 +1,10 @@
-﻿using AngeCafe.API.Data;
+
+using AngeCafe.API.Data;
 using AngeCafe.API.DTOs;
 using AngeCafe.API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization;
 
 namespace AngeCafe.Api.Controllers
 {
@@ -18,6 +19,10 @@ namespace AngeCafe.Api.Controllers
             _context = context;
         }
 
+        // ==========================================
+        // CUSTOMER ORDERING
+        // ==========================================
+
         // POST: api/Order
         [HttpPost]
         public async Task<ActionResult<OrderResponseDto>> CreateOrder(
@@ -26,7 +31,8 @@ namespace AngeCafe.Api.Controllers
             if (string.IsNullOrWhiteSpace(request.CustomerName) ||
                 string.IsNullOrWhiteSpace(request.ContactNumber))
             {
-                return BadRequest("Customer name and contact number are required.");
+                return BadRequest(
+                    "Customer name and contact number are required.");
             }
 
             if (string.IsNullOrWhiteSpace(request.PaymentMethod))
@@ -44,19 +50,24 @@ namespace AngeCafe.Api.Controllers
             if (!paymentMethod.Equals("Cash", StringComparison.OrdinalIgnoreCase) &&
                 !paymentMethod.Equals("GCash", StringComparison.OrdinalIgnoreCase))
             {
-                return BadRequest("Payment method must be Cash or GCash.");
+                return BadRequest(
+                    "Payment method must be Cash or GCash.");
             }
 
-            if (request.Items.Any(i => i.VariantId <= 0 || i.Quantity <= 0))
+            if (request.Items.Any(i =>
+                i.VariantId <= 0 || i.Quantity <= 0))
             {
                 return BadRequest("Invalid item or quantity.");
             }
 
-            var variantIds = request.Items.Select(i => i.VariantId).ToList();
+            var variantIds = request.Items
+                .Select(i => i.VariantId)
+                .ToList();
 
             if (variantIds.Distinct().Count() != variantIds.Count)
             {
-                return BadRequest("Each variant should appear only once in the cart.");
+                return BadRequest(
+                    "Each variant should appear only once in the cart.");
             }
 
             var variants = await _context.MenuItemVariants
@@ -66,7 +77,8 @@ namespace AngeCafe.Api.Controllers
 
             if (variants.Count != variantIds.Count)
             {
-                return BadRequest("One or more selected items do not exist.");
+                return BadRequest(
+                    "One or more selected items do not exist.");
             }
 
             if (variants.Any(v =>
@@ -74,10 +86,12 @@ namespace AngeCafe.Api.Controllers
                 v.MenuItem == null ||
                 !v.MenuItem.IsActive))
             {
-                return BadRequest("One or more selected items are unavailable.");
+                return BadRequest(
+                    "One or more selected items are unavailable.");
             }
 
-            var variantDictionary = variants.ToDictionary(v => v.VariantId);
+            var variantDictionary = variants
+                .ToDictionary(v => v.VariantId);
 
             var order = new Order
             {
@@ -86,7 +100,8 @@ namespace AngeCafe.Api.Controllers
                 OrderDate = DateTime.Now,
                 PaymentMethod = paymentMethod.Equals(
                     "Cash", StringComparison.OrdinalIgnoreCase)
-                    ? "Cash" : "GCash",
+                    ? "Cash"
+                    : "GCash",
                 PaymentStatus = "Unpaid",
                 OrderStatus = "Pending"
             };
@@ -121,21 +136,25 @@ namespace AngeCafe.Api.Controllers
             return CreatedAtAction(
                 nameof(GetOrderByQueueNumber),
                 new { queueNumber = order.QueueNumber },
-                response
-            );
+                response);
         }
+
+        // ==========================================
+        // CUSTOMER ORDER TRACKING
+        // ==========================================
 
         // GET: api/Order/{queueNumber}
         [HttpGet("{queueNumber}")]
-        public async Task<ActionResult<OrderResponseDto>> GetOrderByQueueNumber(
-            string queueNumber)
+        public async Task<ActionResult<OrderResponseDto>>
+            GetOrderByQueueNumber(string queueNumber)
         {
             var order = await _context.Orders
                 .AsNoTracking()
                 .Include(o => o.OrderItems)
                     .ThenInclude(oi => oi.MenuItemVariant)
                         .ThenInclude(v => v!.MenuItem)
-                .FirstOrDefaultAsync(o => o.QueueNumber == queueNumber);
+                .FirstOrDefaultAsync(
+                    o => o.QueueNumber == queueNumber);
 
             if (order == null)
             {
@@ -147,8 +166,8 @@ namespace AngeCafe.Api.Controllers
 
         // GET: api/Order/history?contactNumber=09XXXXXXXXX
         [HttpGet("history")]
-        public async Task<ActionResult<IEnumerable<OrderResponseDto>>> GetOrderHistory(
-            [FromQuery] string contactNumber)
+        public async Task<ActionResult<IEnumerable<OrderResponseDto>>>
+            GetOrderHistory([FromQuery] string contactNumber)
         {
             if (string.IsNullOrWhiteSpace(contactNumber))
             {
@@ -167,11 +186,16 @@ namespace AngeCafe.Api.Controllers
             return Ok(orders.Select(MapOrderResponse));
         }
 
+        // ==========================================
+        // STAFF ORDER MANAGEMENT
+        // ==========================================
+
         // GET: api/Order/staff
-        // Only Waiters and Admins can view all customer orders.
+        // Waiters and Admins can view all customer orders.
         [Authorize(Roles = "Waiter,Admin")]
         [HttpGet("staff")]
-        public async Task<ActionResult<IEnumerable<OrderResponseDto>>> GetAllOrdersForStaff()
+        public async Task<ActionResult<IEnumerable<OrderResponseDto>>>
+            GetAllOrdersForStaff()
         {
             var orders = await _context.Orders
                 .AsNoTracking()
@@ -184,15 +208,38 @@ namespace AngeCafe.Api.Controllers
             return Ok(orders.Select(MapOrderResponse));
         }
 
-        // PUT: api/Order/staff/{id}/status
-        // Only Waiters and Admins can update order status.
+        // GET: api/Order/staff/{orderId}
+        // View a specific order.
         [Authorize(Roles = "Waiter,Admin")]
-        [HttpPut("staff/{id}/status")]
+        [HttpGet("staff/{orderId:int}")]
+        public async Task<ActionResult<OrderResponseDto>>
+            GetStaffOrderById(int orderId)
+        {
+            var order = await _context.Orders
+                .AsNoTracking()
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.MenuItemVariant)
+                        .ThenInclude(v => v!.MenuItem)
+                .FirstOrDefaultAsync(o => o.OrderId == orderId);
+
+            if (order == null)
+            {
+                return NotFound("Order not found.");
+            }
+
+            return Ok(MapOrderResponse(order));
+        }
+
+        // PUT: api/Order/staff/{id}/status
+        // Waiters and Admins can update order status.
+        [Authorize(Roles = "Waiter,Admin")]
+        [HttpPut("staff/{id:int}/status")]
         public async Task<IActionResult> UpdateOrderStatus(
             int id,
-            OrderStatusUpdateDto request)
+            [FromBody] OrderStatusUpdateDto request)
         {
-            if (string.IsNullOrWhiteSpace(request.Status))
+            if (request == null ||
+                string.IsNullOrWhiteSpace(request.Status))
             {
                 return BadRequest("Order status is required.");
             }
@@ -206,28 +253,37 @@ namespace AngeCafe.Api.Controllers
             }
 
             string currentStatus = order.OrderStatus;
-            string newStatus = request.Status.Trim();
+            string requestedStatus = request.Status.Trim();
 
-            // Define the allowed status transitions.
-            bool isValidTransition =
-                (currentStatus == "Pending" &&
-                    (newStatus == "Preparing" || newStatus == "Cancelled"))
-                ||
-                (currentStatus == "Preparing" &&
-                    (newStatus == "Ready for Pickup" || newStatus == "Cancelled"))
-                ||
-                (currentStatus == "Ready for Pickup" &&
-                    newStatus == "Completed");
-
-            if (!isValidTransition)
+            var transitions = new Dictionary<string, string[]>(
+                StringComparer.OrdinalIgnoreCase)
             {
-                return Conflict(new
-                {
-                    message = $"Cannot change order status from {currentStatus} to {newStatus}."
-                });
+                ["Pending"] = new[] { "Preparing", "Cancelled" },
+                ["Preparing"] = new[] { "Ready for Pickup", "Cancelled" },
+                ["Ready for Pickup"] = new[] { "Completed" },
+                ["Completed"] = Array.Empty<string>(),
+                ["Cancelled"] = Array.Empty<string>()
+            };
+
+            if (!transitions.TryGetValue(
+                    currentStatus, out var allowedStatuses))
+            {
+                return Conflict(
+                    $"The current order status '{currentStatus}' is invalid.");
             }
 
-            order.OrderStatus = newStatus;
+            string? normalizedStatus = allowedStatuses.FirstOrDefault(
+                status => status.Equals(
+                    requestedStatus,
+                    StringComparison.OrdinalIgnoreCase));
+
+            if (normalizedStatus == null)
+            {
+                return Conflict(
+                    $"Cannot change order status from {currentStatus} to {requestedStatus}.");
+            }
+
+            order.OrderStatus = normalizedStatus;
 
             await _context.SaveChangesAsync();
 
@@ -240,6 +296,63 @@ namespace AngeCafe.Api.Controllers
                 newStatus = order.OrderStatus
             });
         }
+
+        // PUT: api/Order/staff/{orderId}/payment
+        // Waiters and Admins can update payment status.
+        [Authorize(Roles = "Waiter,Admin")]
+        [HttpPut("staff/{orderId:int}/payment")]
+        public async Task<IActionResult> UpdatePaymentStatus(
+            int orderId,
+            [FromBody] string newPaymentStatus)
+        {
+            if (string.IsNullOrWhiteSpace(newPaymentStatus))
+            {
+                return BadRequest("Payment status is required.");
+            }
+
+            string[] allowedPaymentStatuses =
+            {
+                "Unpaid",
+                "Paid"
+            };
+
+            string? normalizedPaymentStatus =
+                allowedPaymentStatuses.FirstOrDefault(status =>
+                    status.Equals(
+                        newPaymentStatus.Trim(),
+                        StringComparison.OrdinalIgnoreCase));
+
+            if (normalizedPaymentStatus == null)
+            {
+                return BadRequest(
+                    "Invalid payment status. Allowed statuses: " +
+                    string.Join(", ", allowedPaymentStatuses));
+            }
+
+            var order = await _context.Orders
+                .FirstOrDefaultAsync(o => o.OrderId == orderId);
+
+            if (order == null)
+            {
+                return NotFound("Order not found.");
+            }
+
+            order.PaymentStatus = normalizedPaymentStatus;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = "Payment status updated successfully.",
+                orderId = order.OrderId,
+                queueNumber = order.QueueNumber,
+                paymentStatus = order.PaymentStatus
+            });
+        }
+
+        // ==========================================
+        // HELPER METHODS
+        // ==========================================
 
         private async Task<OrderResponseDto> GetOrderResponse(int orderId)
         {
@@ -270,10 +383,12 @@ namespace AngeCafe.Api.Controllers
                 Items = order.OrderItems.Select(oi =>
                     new OrderItemResponseDto
                     {
-                        ItemName = oi.MenuItemVariant?.MenuItem?.ItemName
+                        ItemName =
+                            oi.MenuItemVariant?.MenuItem?.ItemName
                             ?? "Unavailable item",
 
-                        VariantName = oi.MenuItemVariant?.VariantName
+                        VariantName =
+                            oi.MenuItemVariant?.VariantName
                             ?? "Unavailable variant",
 
                         Quantity = oi.Quantity,
