@@ -18,6 +18,7 @@ namespace AngeCafe.API.Controllers
         }
 
         // GET: api/MenuItem
+        // Public access: customers can browse the menu.
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MenuItemResponseDto>>>
             GetMenuItems()
@@ -28,6 +29,7 @@ namespace AngeCafe.API.Controllers
         }
 
         // GET: api/MenuItem/5
+        // Public access: anyone can view a menu item.
         [HttpGet("{id}")]
         public async Task<ActionResult<MenuItemResponseDto>>
             GetMenuItem(int id)
@@ -43,6 +45,7 @@ namespace AngeCafe.API.Controllers
         }
 
         // POST: api/MenuItem
+        // Admin only: create a menu item.
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<MenuItemResponseDto>>
@@ -74,14 +77,17 @@ namespace AngeCafe.API.Controllers
 
                 if (createdItem == null)
                 {
-                    return StatusCode(500,
-                        "Menu item was created but could not be retrieved.");
+                    return StatusCode(
+                        500,
+                        "Menu item was created but could not be retrieved."
+                    );
                 }
 
                 return CreatedAtAction(
                     nameof(GetMenuItem),
                     new { id = item.MenuItemId },
-                    MapToResponse(createdItem));
+                    MapToResponse(createdItem)
+                );
             }
             catch (ArgumentException ex)
             {
@@ -90,10 +96,12 @@ namespace AngeCafe.API.Controllers
         }
 
         // PUT: api/MenuItem/5
+        // Admin only: update a menu item.
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateMenuItem(
-            int id, MenuItemRequestDto request)
+            int id,
+            MenuItemRequestDto request)
         {
             var item = new MenuItem
             {
@@ -130,6 +138,8 @@ namespace AngeCafe.API.Controllers
         }
 
         // DELETE: api/MenuItem/5
+        // Admin only: deactivate a menu item.
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeactivateMenuItem(int id)
         {
