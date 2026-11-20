@@ -30,45 +30,27 @@ namespace AngeCafe.Api.Controllers
         {
             if (string.IsNullOrWhiteSpace(request.CustomerName) ||
                 string.IsNullOrWhiteSpace(request.ContactNumber))
-            {
-                return BadRequest(
-                    "Customer name and contact number are required.");
-            }
+                return BadRequest("Customer name and contact number are required.");
 
             if (string.IsNullOrWhiteSpace(request.PaymentMethod))
-            {
                 return BadRequest("Please select a payment method.");
-            }
 
             if (request.Items == null || request.Items.Count == 0)
-            {
                 return BadRequest("Your cart is empty.");
-            }
 
             string paymentMethod = request.PaymentMethod.Trim();
 
             if (!paymentMethod.Equals("Cash", StringComparison.OrdinalIgnoreCase) &&
                 !paymentMethod.Equals("GCash", StringComparison.OrdinalIgnoreCase))
-            {
-                return BadRequest(
-                    "Payment method must be Cash or GCash.");
-            }
+                return BadRequest("Payment method must be Cash or GCash.");
 
-            if (request.Items.Any(i =>
-                i.VariantId <= 0 || i.Quantity <= 0))
-            {
+            if (request.Items.Any(i => i.VariantId <= 0 || i.Quantity <= 0))
                 return BadRequest("Invalid item or quantity.");
-            }
 
-            var variantIds = request.Items
-                .Select(i => i.VariantId)
-                .ToList();
+            var variantIds = request.Items.Select(i => i.VariantId).ToList();
 
             if (variantIds.Distinct().Count() != variantIds.Count)
-            {
-                return BadRequest(
-                    "Each variant should appear only once in the cart.");
-            }
+                return BadRequest("Each variant should appear only once in the cart.");
 
             var variants = await _context.MenuItemVariants
                 .Include(v => v.MenuItem)
@@ -76,22 +58,15 @@ namespace AngeCafe.Api.Controllers
                 .ToListAsync();
 
             if (variants.Count != variantIds.Count)
-            {
-                return BadRequest(
-                    "One or more selected items do not exist.");
-            }
+                return BadRequest("One or more selected items do not exist.");
 
             if (variants.Any(v =>
                 !v.IsAvailable ||
                 v.MenuItem == null ||
                 !v.MenuItem.IsActive))
-            {
-                return BadRequest(
-                    "One or more selected items are unavailable.");
-            }
+                return BadRequest("One or more selected items are unavailable.");
 
-            var variantDictionary = variants
-                .ToDictionary(v => v.VariantId);
+            var variantDictionary = variants.ToDictionary(v => v.VariantId);
 
             var order = new Order
             {
@@ -100,8 +75,7 @@ namespace AngeCafe.Api.Controllers
                 OrderDate = DateTime.Now,
                 PaymentMethod = paymentMethod.Equals(
                     "Cash", StringComparison.OrdinalIgnoreCase)
-                    ? "Cash"
-                    : "GCash",
+                    ? "Cash" : "GCash",
                 PaymentStatus = "Unpaid",
                 OrderStatus = "Pending"
             };
@@ -109,7 +83,6 @@ namespace AngeCafe.Api.Controllers
             foreach (var item in request.Items)
             {
                 var variant = variantDictionary[item.VariantId];
-
                 decimal subtotal = variant.Price * item.Quantity;
 
                 order.OrderItems.Add(new OrderItem
@@ -153,13 +126,10 @@ namespace AngeCafe.Api.Controllers
                 .Include(o => o.OrderItems)
                     .ThenInclude(oi => oi.MenuItemVariant)
                         .ThenInclude(v => v!.MenuItem)
-                .FirstOrDefaultAsync(
-                    o => o.QueueNumber == queueNumber);
+                .FirstOrDefaultAsync(o => o.QueueNumber == queueNumber);
 
             if (order == null)
-            {
                 return NotFound("Order not found.");
-            }
 
             return Ok(MapOrderResponse(order));
         }
@@ -170,9 +140,7 @@ namespace AngeCafe.Api.Controllers
             GetOrderHistory([FromQuery] string contactNumber)
         {
             if (string.IsNullOrWhiteSpace(contactNumber))
-            {
                 return BadRequest("Contact number is required.");
-            }
 
             var orders = await _context.Orders
                 .AsNoTracking()
@@ -191,7 +159,6 @@ namespace AngeCafe.Api.Controllers
         // ==========================================
 
         // GET: api/Order/staff
-        // Waiters and Admins can view all customer orders.
         [Authorize(Roles = "Waiter,Admin")]
         [HttpGet("staff")]
         public async Task<ActionResult<IEnumerable<OrderResponseDto>>>
@@ -209,7 +176,6 @@ namespace AngeCafe.Api.Controllers
         }
 
         // GET: api/Order/staff/{orderId}
-        // View a specific order.
         [Authorize(Roles = "Waiter,Admin")]
         [HttpGet("staff/{orderId:int}")]
         public async Task<ActionResult<OrderResponseDto>>
@@ -223,34 +189,26 @@ namespace AngeCafe.Api.Controllers
                 .FirstOrDefaultAsync(o => o.OrderId == orderId);
 
             if (order == null)
-            {
                 return NotFound("Order not found.");
-            }
 
             return Ok(MapOrderResponse(order));
         }
 
         // PUT: api/Order/staff/{id}/status
-        // Waiters and Admins can update order status.
         [Authorize(Roles = "Waiter,Admin")]
         [HttpPut("staff/{id:int}/status")]
         public async Task<IActionResult> UpdateOrderStatus(
             int id,
             [FromBody] OrderStatusUpdateDto request)
         {
-            if (request == null ||
-                string.IsNullOrWhiteSpace(request.Status))
-            {
+            if (request == null || string.IsNullOrWhiteSpace(request.Status))
                 return BadRequest("Order status is required.");
-            }
 
             var order = await _context.Orders
                 .FirstOrDefaultAsync(o => o.OrderId == id);
 
             if (order == null)
-            {
                 return NotFound("Order not found.");
-            }
 
             string currentStatus = order.OrderStatus;
             string requestedStatus = request.Status.Trim();
@@ -265,12 +223,8 @@ namespace AngeCafe.Api.Controllers
                 ["Cancelled"] = Array.Empty<string>()
             };
 
-            if (!transitions.TryGetValue(
-                    currentStatus, out var allowedStatuses))
-            {
-                return Conflict(
-                    $"The current order status '{currentStatus}' is invalid.");
-            }
+            if (!transitions.TryGetValue(currentStatus, out var allowedStatuses))
+                return Conflict($"The current order status '{currentStatus}' is invalid.");
 
             string? normalizedStatus = allowedStatuses.FirstOrDefault(
                 status => status.Equals(
@@ -278,13 +232,10 @@ namespace AngeCafe.Api.Controllers
                     StringComparison.OrdinalIgnoreCase));
 
             if (normalizedStatus == null)
-            {
                 return Conflict(
                     $"Cannot change order status from {currentStatus} to {requestedStatus}.");
-            }
 
             order.OrderStatus = normalizedStatus;
-
             await _context.SaveChangesAsync();
 
             return Ok(new
@@ -298,7 +249,6 @@ namespace AngeCafe.Api.Controllers
         }
 
         // PUT: api/Order/staff/{orderId}/payment
-        // Waiters and Admins can update payment status.
         [Authorize(Roles = "Waiter,Admin")]
         [HttpPut("staff/{orderId:int}/payment")]
         public async Task<IActionResult> UpdatePaymentStatus(
@@ -306,15 +256,9 @@ namespace AngeCafe.Api.Controllers
             [FromBody] string newPaymentStatus)
         {
             if (string.IsNullOrWhiteSpace(newPaymentStatus))
-            {
                 return BadRequest("Payment status is required.");
-            }
 
-            string[] allowedPaymentStatuses =
-            {
-                "Unpaid",
-                "Paid"
-            };
+            string[] allowedPaymentStatuses = { "Unpaid", "Paid" };
 
             string? normalizedPaymentStatus =
                 allowedPaymentStatuses.FirstOrDefault(status =>
@@ -323,22 +267,16 @@ namespace AngeCafe.Api.Controllers
                         StringComparison.OrdinalIgnoreCase));
 
             if (normalizedPaymentStatus == null)
-            {
                 return BadRequest(
-                    "Invalid payment status. Allowed statuses: " +
-                    string.Join(", ", allowedPaymentStatuses));
-            }
+                    "Invalid payment status. Allowed statuses: Unpaid, Paid");
 
             var order = await _context.Orders
                 .FirstOrDefaultAsync(o => o.OrderId == orderId);
 
             if (order == null)
-            {
                 return NotFound("Order not found.");
-            }
 
             order.PaymentStatus = normalizedPaymentStatus;
-
             await _context.SaveChangesAsync();
 
             return Ok(new
@@ -347,6 +285,53 @@ namespace AngeCafe.Api.Controllers
                 orderId = order.OrderId,
                 queueNumber = order.QueueNumber,
                 paymentStatus = order.PaymentStatus
+            });
+        }
+
+        // ==========================================
+        // ADMIN DAILY SALES REPORT
+        // ==========================================
+
+        // GET: api/Order/staff/daily-sales
+        [Authorize(Roles = "Admin")]
+        [HttpGet("staff/daily-sales")]
+        public async Task<IActionResult> GetDailySales()
+        {
+            DateTime today = DateTime.Today;
+            DateTime tomorrow = today.AddDays(1);
+
+            var todaysOrders = _context.Orders
+                .AsNoTracking()
+                .Where(o =>
+                    o.OrderDate >= today &&
+                    o.OrderDate < tomorrow);
+
+            var salesOrders = todaysOrders
+                .Where(o =>
+                    o.PaymentStatus == "Paid" &&
+                    o.OrderStatus != "Cancelled");
+
+            decimal cashSales = await salesOrders
+                .Where(o => o.PaymentMethod == "Cash")
+                .SumAsync(o => (decimal?)o.TotalAmount) ?? 0;
+
+            decimal gcashSales = await salesOrders
+                .Where(o => o.PaymentMethod == "GCash")
+                .SumAsync(o => (decimal?)o.TotalAmount) ?? 0;
+
+            int totalOrders = await todaysOrders.CountAsync();
+
+            int completedOrders = await todaysOrders
+                .CountAsync(o => o.OrderStatus == "Completed");
+
+            return Ok(new
+            {
+                reportDate = today.ToString("yyyy-MM-dd"),
+                totalOrders,
+                completedOrders,
+                totalSales = cashSales + gcashSales,
+                cashSales,
+                gcashSales
             });
         }
 
