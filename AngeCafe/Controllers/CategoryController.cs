@@ -2,6 +2,7 @@
 using AngeCafe.API.Models;
 using AngeCafe.API.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AngeCafe.API.Controllers
 {
@@ -40,6 +41,7 @@ namespace AngeCafe.API.Controllers
         }
 
         // POST: api/Category
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateCategory(Category category)
         {
@@ -60,6 +62,7 @@ namespace AngeCafe.API.Controllers
         }
 
         // PUT: api/Category/5
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCategory(
             int id, Category updatedCategory)
@@ -87,6 +90,7 @@ namespace AngeCafe.API.Controllers
         }
 
         // DELETE: api/Category/5
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
