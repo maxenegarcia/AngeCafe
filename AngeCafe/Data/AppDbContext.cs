@@ -1,4 +1,5 @@
-﻿using AngeCafe.API.Models;
+﻿
+using AngeCafe.API.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace AngeCafe.API.Data
@@ -20,10 +21,32 @@ namespace AngeCafe.API.Data
 
         public DbSet<OrderItem> OrderItems { get; set; }
 
+        public DbSet<User> Users { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
+            // User account configuration
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Username)
+                .IsUnique();
+
+            modelBuilder.Entity<User>()
+                .Property(u => u.Username)
+                .HasMaxLength(100)
+                .IsRequired();
+
+            modelBuilder.Entity<User>()
+                .Property(u => u.PasswordHash)
+                .IsRequired();
+
+            modelBuilder.Entity<User>()
+                .Property(u => u.Role)
+                .HasMaxLength(30)
+                .IsRequired();
+
+            // Menu item variant configuration
             modelBuilder.Entity<MenuItemVariant>()
                 .HasKey(v => v.VariantId);
 
@@ -37,6 +60,7 @@ namespace AngeCafe.API.Data
                 .Property(v => v.Price)
                 .HasPrecision(10, 2);
 
+            // Order configuration
             modelBuilder.Entity<Order>()
                 .HasMany(o => o.OrderItems)
                 .WithOne(oi => oi.Order)
